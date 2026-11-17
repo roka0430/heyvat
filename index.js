@@ -36,6 +36,8 @@ const setupPagesRouting = (dir, route = "") => {
   }
 };
 
+// api
+
 // pages
 
 const pagesDir = path.join(process.cwd(), "views/pages");

@@ -1,9 +1,17 @@
 {% extends "layouts/base.njk" %}
 
+{% block styles %}
+  <link rel="stylesheet" href="/css/common.css" />
+{% endblock %}
+
 {% block title %}
   Heyvat
 {% endblock %}
 
 {% block body %}
   <h1>Home</h1>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/js/common.js" defer></script>
 {% endblock %}
