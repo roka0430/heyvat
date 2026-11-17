@@ -13,11 +13,11 @@
       {% include "partials/header.njk" %}
     {% endblock %}
 
-    {% block body %}{% endblock %}
-
-    {% block footer %}
-      {% include "partials/footer.njk" %}
+    {% block sidebar %}
+      {% include "partials/sidebar.njk" %}
     {% endblock %}
+
+    {% block body %}{% endblock %}
 
     {% block scripts %}{% endblock %}
   </body>
