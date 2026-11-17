@@ -1,3 +1,6 @@
+import fs from "fs";
+import path from "path";
+
 import express from "express";
 import nunjucks from "nunjucks";
 
@@ -10,19 +13,33 @@ app.engine("njk", nunjucks.render);
 app.set("view engine", "njk");
 app.use(express.static("public"));
 
+const setupPagesRouting = (dir, route = "") => {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      setupPagesRouting(fullPath, `${route}/${entry.name}`);
+    }
+
+    if (entry.isFile() && entry.name === "index.njk") {
+      app.get(route || "/", (req, res) => {
+        const template = path
+          .relative("views", fullPath)
+          .replaceAll("\\", "/")
+          .replace(/\.njk$/, "");
+
+        res.render(template);
+      });
+    }
+  }
+};
+
 // pages
 
-app.get("/", (req, res) => {
-  res.render("pages/home/index");
-});
-
-app.get("/aaa", (req, res) => {
-  res.render("pages/aaa/index");
-});
-
-app.get("/bbb", (req, res) => {
-  res.render("pages/bbb/index");
-});
+const pagesDir = path.join(process.cwd(), "views/pages");
+setupPagesRouting(pagesDir);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
