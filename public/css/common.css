@@ -1,0 +1,19 @@
+:root {
+  --color-background: #101720;
+  --color-surface: #192431;
+  --color-text: #e5e8ec;
+  --color-text-muted: #8999aa;
+  --color-border: #2b3949;
+  --color-accent: #78b9d4;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+}
