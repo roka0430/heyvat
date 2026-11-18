@@ -60,6 +60,27 @@ app.get("/api/profile", async (req, res) => {
   }
 });
 
+app.get("/api/uid", async (req, res) => {
+  try {
+    const uid = await settings.get("uid");
+    res.json({ uid });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get uid" });
+  }
+});
+
+app.put("/api/uid", async (req, res) => {
+  try {
+    const { uid } = req.body;
+    await settings.set("uid", String(uid));
+    res.json({ uid });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update uid" });
+  }
+});
+
 // pages
 
 const pagesDir = path.join(process.cwd(), "views/pages");
