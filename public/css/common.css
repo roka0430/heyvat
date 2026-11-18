@@ -102,6 +102,10 @@ a {
   width: 200px;
 }
 
+.app-sidebar__separator {
+  border-top: solid 1px var(--color-border);
+}
+
 .app-sidebar__link {
   display: flex;
   align-items: center;
