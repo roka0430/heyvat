@@ -1,4 +1,4 @@
-<header class="app-header">
+<header class="app-header" x-data="header">
   <div class="app-header__inner">
     <a class="app-header__brand" href="/">
       <img
@@ -13,8 +13,8 @@
     <div class="app-header__spacer"></div>
     <div
       class="app-header__uid"
-      x-data
-      @click="navigator.clipboard.writeText('{{ uid }}')">
+      @click="copyUid({{ uid }})"
+      title="クリックでUIDをコピー">
       UID {{ uid }}
     </div>
   </div>

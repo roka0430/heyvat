@@ -39,6 +39,10 @@ a {
   text-decoration: none;
 }
 
+[x-cloak] {
+  display: none !important;
+}
+
 /* layout */
 
 .app-layout {
@@ -175,15 +179,68 @@ a {
 /* toast */
 
 .app-toast {
+  --toast-width: 200px;
+  --toast-height: 50px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+
   position: fixed;
   bottom: 20px;
   right: 20px;
+}
 
-  padding-block: 8px;
-  padding-inline: 16px;
+.app-toast__card {
+  width: var(--toast-width);
+  height: var(--toast-height);
 
   background: var(--color-accent);
   border-radius: 5px;
 
   font-size: 0.9rem;
+
+  animation: toast-fade-in 0.15s ease-in forwards;
+  transform: all 0.15s;
+
+  overflow: hidden;
+}
+
+.app-toast__card.leaving {
+  animation: toast-leaving 0.3s ease-in forwards;
+}
+
+@keyframes toast-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes toast-leaving {
+  0% {
+    width: var(--toast-width);
+    height: var(--toast-height);
+  }
+
+  60% {
+    width: 0;
+    height: var(--toast-height);
+  }
+
+  100% {
+    width: 0;
+    height: 0;
+  }
+}
+.app-toast__message {
+  width: var(--toast-width);
+  height: var(--toast-height);
+
+  padding-block: 10px;
+  padding-inline: 12px;
 }

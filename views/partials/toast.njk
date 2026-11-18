@@ -1,1 +1,9 @@
-<div class="app-toast">toast</div>
+<div class="app-toast" x-data x-show="$store.toast.messages.length > 0" x-cloak>
+  <template x-for="message in $store.toast.messages" :key="message.id">
+    <div
+      class="app-toast__card"
+      :class="{'leaving': message.leaving}">
+      <div class="app-toast__message" x-text="message.message"></div>
+    </div>
+  </template>
+</div>
