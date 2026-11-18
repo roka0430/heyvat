@@ -72,6 +72,17 @@ a {
   font-size: 1.2rem;
 }
 
+.app-header__uid {
+  padding-block: 2px;
+  padding-inline: 10px;
+
+  border: solid 1px var(--color-accent);
+  border-radius: 5px;
+
+  color: var(--color-accent);
+  font-size: 0.8rem;
+}
+
 /* sidebar */
 
 .app-sidebar {
