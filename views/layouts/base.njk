@@ -12,21 +12,15 @@
   </head>
   <body>
     <div class="app-layout">
-      <header class="app-header">
-        {% block header %}
-          {% include "partials/header.njk" %}
-        {% endblock %}
-      </header>
+      {% block header %}
+        {% include "partials/header.njk" %}
+      {% endblock %}
 
-      <aside class="app-sidebar">
-        {% block sidebar %}
-          {% include "partials/sidebar.njk" %}
-        {% endblock %}
-      </aside>
+      {% block sidebar %}
+        {% include "partials/sidebar.njk" %}
+      {% endblock %}
 
-      <main class="app-main">
-        {% block content %}{% endblock %}
-      </main>
+      {% block content %}{% endblock %}
 
       {% block toast %}
         {% include "partials/toast.njk" %}
