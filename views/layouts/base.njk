@@ -28,6 +28,10 @@
         {% block content %}{% endblock %}
       </main>
 
+      {% block toast %}
+        {% include "partials/toast.njk" %}
+      {% endblock %}
+
       <script src="/js/common.js" defer></script>
       {% block scripts %}{% endblock %}
       <script src="/js/vendor/alpine-3.17.5.min.js" defer></script>
