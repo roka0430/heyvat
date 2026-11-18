@@ -4,6 +4,8 @@ import path from "path";
 import express from "express";
 import nunjucks from "nunjucks";
 
+import getProfile from "./modules/profile.js";
+
 const app = express();
 const port = 3000;
 
@@ -37,6 +39,16 @@ const setupPagesRouting = (dir, route = "") => {
 };
 
 // api
+
+app.get("/api/profile", async (req, res) => {
+  try {
+    const data = await getProfile(889572498);
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch profile" });
+  }
+});
 
 // pages
 
