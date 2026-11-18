@@ -17,3 +17,68 @@ body {
   background: var(--color-background);
   color: var(--color-text);
 }
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+/* layout */
+
+.app-layout {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar main";
+  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 16px;
+
+  padding-block: 24px 32px;
+  padding-inline: 32px;
+}
+
+/* header */
+
+.app-header {
+  grid-area: header;
+}
+
+.app-header__inner {
+  display: flex;
+  align-items: center;
+}
+
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding-block: 3px;
+  padding-inline: 4px 10px;
+
+  cursor: pointer;
+}
+
+.app-header__logo {
+}
+
+.app-header__title {
+  font-size: 1.2rem;
+}
+
+/* sidebar */
+
+.app-sidebar {
+  grid-area: sidebar;
+
+  padding: 16px;
+
+  background: var(--color-surface);
+  border-radius: 16px;
+}
+
+.app-main {
+  grid-area: main;
+  min-width: 0;
+}

@@ -10,16 +10,24 @@
     {% block styles %}{% endblock %}
   </head>
   <body>
-    {% block header %}
-      {% include "partials/header.njk" %}
-    {% endblock %}
+    <div class="app-layout">
+      <header class="app-header">
+        {% block header %}
+          {% include "partials/header.njk" %}
+        {% endblock %}
+      </header>
 
-    {% block sidebar %}
-      {% include "partials/sidebar.njk" %}
-    {% endblock %}
+      <aside class="app-sidebar">
+        {% block sidebar %}
+          {% include "partials/sidebar.njk" %}
+        {% endblock %}
+      </aside>
 
-    {% block body %}{% endblock %}
+      <main class="app-main">
+        {% block content %}{% endblock %}
+      </main>
 
-    {% block scripts %}{% endblock %}
+      {% block scripts %}{% endblock %}
+    </div>
   </body>
 </html>
