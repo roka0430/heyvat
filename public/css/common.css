@@ -45,11 +45,16 @@ a {
 
 .app-header {
   grid-area: header;
+  padding-right: 8px;
 }
 
 .app-header__inner {
   display: flex;
   align-items: center;
+}
+
+.app-header__spacer {
+  flex: 1;
 }
 
 .app-header__brand {
@@ -61,9 +66,6 @@ a {
   padding-inline: 4px 10px;
 
   cursor: pointer;
-}
-
-.app-header__logo {
 }
 
 .app-header__title {
