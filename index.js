@@ -52,7 +52,8 @@ const setupPagesRouting = async (dir, route = "") => {
 
 app.get("/api/profile", async (req, res) => {
   try {
-    const data = await getProfile("889572498");
+    const uid = await settings.get("uid");
+    const data = await getProfile(uid);
     res.json(data);
   } catch (error) {
     console.error(error);
