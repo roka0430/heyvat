@@ -11,6 +11,18 @@
 :root {
   --font-sans: "Inter", "Zen Kaku Gothic New", sans-serif;
 
+  --color-background: #f2f5f8;
+  --color-surface: #ffffff;
+  --color-surface-hover: #e8eef3;
+
+  --color-text: #263442;
+  --color-text-muted: #758596;
+
+  --color-border: #d8e0e8;
+  --color-accent: #3986a8;
+}
+
+:root.dark {
   --color-background: #101720;
   --color-surface: #192431;
   --color-surface-hover: #223244;
@@ -74,6 +86,11 @@ a {
   flex: 1;
 }
 
+html:not(.dark) .app-header__logo {
+  filter: brightness(0) saturate(100%) invert(14%) sepia(59%) saturate(359%) hue-rotate(168deg) brightness(94%)
+    contrast(87%);
+}
+
 .app-header__brand {
   display: flex;
   align-items: center;
@@ -114,7 +131,7 @@ a {
   border-radius: 8px;
 }
 
-.app-sidebar__links {
+.app-sidebar__list {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -126,7 +143,7 @@ a {
   border-top: solid 1px var(--color-border);
 }
 
-.app-sidebar__link {
+.app-sidebar__item {
   display: flex;
   align-items: center;
 
@@ -134,15 +151,17 @@ a {
   border-radius: 5px;
 
   color: var(--color-text-muted);
+
+  cursor: pointer;
   transition: all 0.15s;
 }
 
-.app-sidebar__link:hover,
-.app-sidebar__link.current {
+.app-sidebar__item:hover,
+.app-sidebar__item.current {
   background: radial-gradient(transparent -5%, var(--color-surface-hover));
 }
 
-.app-sidebar__link.current {
+.app-sidebar__item.current {
   pointer-events: none;
 }
 
@@ -160,7 +179,7 @@ a {
 }
 
 @media screen and (max-width: 1023px) {
-  .app-sidebar__links {
+  .app-sidebar__list {
     width: fit-content;
   }
 

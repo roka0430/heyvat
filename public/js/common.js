@@ -39,4 +39,28 @@ document.addEventListener("alpine:init", () => {
       }
     },
   }));
+
+  Alpine.data("sidebar", () => ({
+    theme: "light",
+
+    init() {
+      const theme = localStorage.getItem("heyvat:theme");
+
+      if (theme === "light" || theme === "dark") {
+        this.theme = theme;
+      }
+
+      this.updateTheme();
+    },
+
+    toggleTheme() {
+      this.theme = this.theme === "light" ? "dark" : "light";
+      localStorage.setItem("heyvat:theme", this.theme);
+      this.updateTheme();
+    },
+
+    updateTheme() {
+      document.documentElement.classList.toggle("dark", this.theme === "dark");
+    },
+  }));
 });
