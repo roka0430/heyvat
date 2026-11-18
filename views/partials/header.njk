@@ -10,5 +10,10 @@
     <h1 class="app-header__title">Heyvat</h1>
   </a>
   <div class="app-header__spacer"></div>
-  <div class="app-header__uid">UID {{ uid }}</div>
+  <div
+    class="app-header__uid"
+    x-data
+    @click="navigator.clipboard.writeText('{{ uid }}')">
+    UID {{ uid }}
+  </div>
 </div>

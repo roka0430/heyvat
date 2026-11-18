@@ -94,6 +94,9 @@ a {
 
   color: var(--color-accent);
   font-size: 0.8rem;
+
+  user-select: none;
+  cursor: pointer;
 }
 
 /* sidebar */
