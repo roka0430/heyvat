@@ -1,11 +1,14 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import express from "express";
 import nunjucks from "nunjucks";
 
-import getProfile from "./modules/profile.js";
 import settings from "./modules/settings.js";
+import getProfile from "./modules/profile.js";
+import getCharacterNameByAvatarId from "./modules/builds.js";
+
+console.log(getCharacterNameByAvatarId(10000060));
 
 const app = express();
 const port = 3000;
