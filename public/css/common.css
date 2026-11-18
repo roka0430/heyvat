@@ -86,8 +86,8 @@ a {
 }
 
 .app-header__uid {
-  padding-block: 2px;
-  padding-inline: 10px;
+  padding-block: 3px;
+  padding-inline: 8px;
 
   border: solid 1px var(--color-accent);
   border-radius: 5px;
@@ -146,6 +146,10 @@ a {
 
   width: 40px;
   height: 40px;
+}
+
+.app-sidebar__title {
+  transform: translateY(-1px);
 }
 
 @media screen and (max-width: 1023px) {
