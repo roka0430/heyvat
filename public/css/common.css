@@ -1,8 +1,11 @@
 :root {
   --color-background: #101720;
   --color-surface: #192431;
+  --color-surface-hover: #223244;
+
   --color-text: #e5e8ec;
   --color-text-muted: #8999aa;
+
   --color-border: #2b3949;
   --color-accent: #78b9d4;
 }
@@ -30,18 +33,19 @@ a {
   grid-template-areas:
     "header header"
     "sidebar main";
-  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-columns: min-content minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 16px;
+  gap: 20px 24px;
 
-  padding-block: 24px 32px;
-  padding-inline: 32px;
+  padding-block: 20px 32px;
+  /* padding-inline: 32px; */
 }
 
 /* header */
 
 .app-header {
   grid-area: header;
+  padding-inline: 32px;
 }
 
 .app-header__inner {
@@ -72,11 +76,43 @@ a {
 .app-sidebar {
   grid-area: sidebar;
 
-  padding: 16px;
+  padding: 10px;
+  padding-left: 9px;
 
   background: var(--color-surface);
-  border-radius: 16px;
+  border-radius: 0 8px 8px 0;
 }
+
+.app-sidebar__links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.app-sidebar__links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 40px;
+  width: 40px;
+
+  border-radius: 5px;
+
+  color: var(--color-text-muted);
+  transition: all 0.15s;
+}
+
+.app-sidebar__links a:hover,
+.app-sidebar__links a.current {
+  background: var(--color-surface-hover);
+}
+
+.app-sidebar__links a.current {
+  pointer-events: none;
+}
+
+/* main */
 
 .app-main {
   grid-area: main;
