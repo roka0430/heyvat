@@ -7,6 +7,7 @@
 
     <title>{% block title %}Heyvat{% endblock %}</title>
 
+    <link rel="stylesheet" href="/css/common.css" />
     {% block styles %}{% endblock %}
   </head>
   <body>
@@ -27,7 +28,9 @@
         {% block content %}{% endblock %}
       </main>
 
+      <script src="/js/common.js" defer></script>
       {% block scripts %}{% endblock %}
+      <script src="/js/vendor/alpine-3.17.5.min.js" defer></script>
     </div>
   </body>
 </html>
