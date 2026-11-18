@@ -5,6 +5,7 @@ import express from "express";
 import nunjucks from "nunjucks";
 
 import getProfile from "./modules/profile.js";
+import settings from "./modules/settings.js";
 
 const app = express();
 const port = 3000;
@@ -15,7 +16,16 @@ app.engine("njk", nunjucks.render);
 app.set("view engine", "njk");
 app.use(express.static("public"));
 
-const setupPagesRouting = (dir, route = "") => {
+app.use(async (req, res, next) => {
+  try {
+    res.locals.uid = await settings.get("uid");
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+const setupPagesRouting = async (dir, route = "") => {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
 
   for (const entry of entries) {
@@ -42,7 +52,7 @@ const setupPagesRouting = (dir, route = "") => {
 
 app.get("/api/profile", async (req, res) => {
   try {
-    const data = await getProfile(889572498);
+    const data = await getProfile("889572498");
     res.json(data);
   } catch (error) {
     console.error(error);

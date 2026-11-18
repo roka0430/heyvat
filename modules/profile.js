@@ -1,17 +1,17 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
 
-const CACHE_FILE = path.join("data", "cache", "profile.json");
+const STORED_FILE = path.join("data", "profile.json");
 
 const pending = new Map();
 
-const readCache = async () => {
+const readStoredProfile = async () => {
   try {
-    const content = await fs.readFile(CACHE_FILE, "utf-8");
-    const cache = JSON.parse(content);
+    const content = await fs.readFile(STORED_FILE, "utf-8");
+    const stored = JSON.parse(content);
 
-    if (Date.now() < cache.expiresAt) {
-      return cache.data;
+    if (Date.now() < stored.expiresAt) {
+      return stored.data;
     }
 
     return null;
@@ -20,27 +20,27 @@ const readCache = async () => {
   }
 };
 
-const writeCache = async (uid, data, ttl) => {
-  const file = path.parse(CACHE_FILE);
+const writeStoredProfile = async (uid, data, ttl) => {
+  const file = path.parse(STORED_FILE);
   const tempFile = path.format({ dir: file.dir, name: file.name, ext: ".tmp" });
 
-  await fs.mkdir(path.dirname(CACHE_FILE), { recursive: true });
+  await fs.mkdir(path.dirname(STORED_FILE), { recursive: true });
 
-  const cache = {
+  const stored = {
     uid,
     data,
     expiresAt: Date.now() + ttl,
   };
 
-  await fs.writeFile(tempFile, JSON.stringify(cache), "utf-8");
-  await fs.rename(tempFile, CACHE_FILE);
+  await fs.writeFile(tempFile, JSON.stringify(stored), "utf-8");
+  await fs.rename(tempFile, STORED_FILE);
 };
 
 const fetchWithCache = async (uid, url) => {
-  const cached = await readCache();
+  const stored = await readStoredProfile();
 
-  if (cached) {
-    return cached;
+  if (stored) {
+    return stored;
   }
 
   if (pending.has(uid)) {
@@ -61,7 +61,7 @@ const fetchWithCache = async (uid, url) => {
 
       const data = await response.json();
 
-      await writeCache(uid, data, data.ttl * 1000);
+      await writeStoredProfile(uid, data, data.ttl * 1000);
 
       return data;
     } finally {
