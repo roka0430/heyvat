@@ -50,6 +50,12 @@ const setupPagesRouting = async (dir, route = "") => {
 
 // api
 
+app.get("/api/backup", async (req, res) => {
+  const content = fs.readFileSync("data/backup.json", "utf-8");
+  const stored = JSON.parse(content);
+  res.json(stored.data.avatarInfoList);
+});
+
 app.get("/api/profile", async (req, res) => {
   try {
     const uid = await settings.get("uid");
