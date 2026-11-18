@@ -5,10 +5,8 @@ import express from "express";
 import nunjucks from "nunjucks";
 
 import settings from "./modules/settings.js";
-import getProfile from "./modules/profile.js";
-import getCharacterNameByAvatarId from "./modules/builds.js";
-
-console.log(getCharacterNameByAvatarId(10000060));
+import profiles from "./modules/profile.js";
+import builds from "./modules/builds.js";
 
 const app = express();
 const port = 3000;
@@ -53,16 +51,12 @@ const setupPagesRouting = async (dir, route = "") => {
 
 // api
 
-app.get("/api/backup", async (req, res) => {
-  const content = fs.readFileSync("data/backup.json", "utf-8");
-  const stored = JSON.parse(content);
-  res.json(stored.data.avatarInfoList);
-});
+app.post("/api/resources/refresh", async (req, res) => {});
 
 app.get("/api/profile", async (req, res) => {
   try {
     const uid = await settings.get("uid");
-    const data = await getProfile(uid);
+    const data = await profiles.getProfiles(uid);
     res.json(data);
   } catch (error) {
     console.error(error);

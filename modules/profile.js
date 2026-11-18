@@ -74,7 +74,11 @@ const fetchWithCache = async (uid, url) => {
   return promise;
 };
 
-export default function getProfile(uid) {
+const getProfile = (uid) => {
   const url = `https://enka.network/api/uid/${uid}/`;
   return fetchWithCache(uid, url);
-}
+};
+
+export default {
+  getProfile,
+};
