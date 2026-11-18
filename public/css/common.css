@@ -1,4 +1,16 @@
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Zen Kaku Gothic New";
+  src: url("/fonts/zen-kaku-gothic-new-japanese-400-normal.woff2") format("woff2");
+}
+
 :root {
+  --font-sans: "Inter", "Zen Kaku Gothic New", sans-serif;
+
   --color-background: #101720;
   --color-surface: #192431;
   --color-surface-hover: #223244;
@@ -19,6 +31,7 @@
 body {
   background: var(--color-background);
   color: var(--color-text);
+  font-family: var(--font-sans);
 }
 
 a {
