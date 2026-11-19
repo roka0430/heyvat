@@ -3,6 +3,7 @@
 {% set pageId = "calendar" %}
 
 {% block styles %}
+  <link rel="stylesheet" href="/css/calendar.css" />
 {% endblock %}
 
 {% block title %}
@@ -12,8 +13,24 @@
 {% block content %}
   <main class="app-main">
     <h2 class="app-main__page-title">カレンダー</h2>
+    <div class="calendar" x-data="calendar">
+      <div class="calendar__header">header</div>
+      <div class="calendar__body">
+        <div class="calendar__weekdays">
+          <template x-for="weekday in weekdays" :key="weekday.value">
+            <div class="calendar__weekday" x-text="weekday.weekday"></div>
+          </template>
+        </div>
+        <div class="calendar__days">
+          <template x-for="cell in cells" :key="cell.key">
+            <div class="calendar__day" x-text="cell.date"></div>
+          </template>
+        </div>
+      </div>
+    </div>
   </main>
 {% endblock %}
 
 {% block scripts %}
+  <script src="/js/calendar.js" defer></script>
 {% endblock %}
