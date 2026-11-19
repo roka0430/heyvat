@@ -4,12 +4,12 @@
 }
 
 @font-face {
-  font-family: "Zen Kaku Gothic New";
-  src: url("/fonts/zen-kaku-gothic-new-japanese-400-normal.woff2") format("woff2");
+  font-family: "Line Seed JP";
+  src: url("/fonts/line-seed-jp-japanese-400-normal.woff2") format("woff2");
 }
 
 :root {
-  --font-sans: "Inter", "Zen Kaku Gothic New", sans-serif;
+  --font-sans: "Inter", "Line Seed JP", sans-serif;
 
   --color-background: #f2f5f8;
   --color-surface: #ffffff;
@@ -196,10 +196,6 @@ html:not(.dark) .app-header__logo {
 
   width: 40px;
   height: 40px;
-}
-
-.app-sidebar__title {
-  transform: translateY(-1px);
 }
 
 @media screen and (max-width: 1023px) {
