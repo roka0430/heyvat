@@ -56,8 +56,9 @@ app.post("/api/resources/refresh", async (req, res) => {});
 
 app.get("/api/versions/current", async (req, res) => {
   try {
-    const versionData = await version.getCurrentVersion();
-    res.json(versionData);
+    const now = new Date();
+    const versions = await version.getVersionsByDateRange(now, now);
+    res.json(versions);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to get current version" });
@@ -65,29 +66,65 @@ app.get("/api/versions/current", async (req, res) => {
 });
 
 app.get("/api/versions", async (req, res) => {
-  const { dateFrom, dateTo, versionFrom, versionTo } = req.query;
+  const { date, dateFrom, dateTo, version: versionValue, versionFrom, versionTo } = req.query;
 
-  const hasDateRange = dateFrom && dateTo;
-  const hasVersionRange = versionFrom && versionTo;
+  const conditions = {
+    date: Boolean(date),
+    dateRange: Boolean(dateFrom && dateTo),
+    version: Boolean(versionValue),
+    versionRange: Boolean(versionFrom && versionTo),
+  };
 
-  if (Boolean(hasDateRange) === Boolean(hasVersionRange)) {
+  const specifiedCount = Object.values(conditions).filter(Boolean).length;
+
+  if (specifiedCount !== 1) {
     return res.status(400).json({
-      error: "Specify either a date range or a version range",
+      error: "Specify exactly one search condition",
     });
   }
 
-  if (hasDateRange) {
-    const versions = await version.getVersionsByDateRange(dateFrom, dateTo);
-    return res.json(versions);
+  if (conditions.date) {
+    try {
+      const versionData = await version.getVersionByDate(date);
+      return res.json(versionData);
+    } catch (error) {
+      return res.status(400).json({
+        error: "Invalid date",
+      });
+    }
   }
 
-  try {
-    const versions = await version.getVersionsByVersionRange(versionFrom, versionTo);
-    return res.json(versions);
-  } catch (error) {
-    return res.status(400).json({
-      error: "Invalid version range",
-    });
+  if (conditions.dateRange) {
+    try {
+      const versions = await version.getVersionsByDateRange(dateFrom, dateTo);
+      return res.json(versions);
+    } catch (error) {
+      return res.status(400).json({
+        error: "Invalid date range",
+      });
+    }
+  }
+
+  if (conditions.version) {
+    try {
+      const versionData = await version.getVersionByVersionName(versionValue);
+      return res.json(versionData);
+    } catch (error) {
+      return res.status(400).json({
+        error: "Invalid version",
+      });
+    }
+  }
+
+  if (conditions.versionRange) {
+    try {
+      const versions = await version.getVersionsByVersionRange(versionFrom, versionTo);
+      return res.json(versions);
+    } catch (error) {
+      return res.status(400).json({
+        error: "Invalid version range",
+      });
+    }
   }
 });
 

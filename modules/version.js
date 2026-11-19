@@ -131,7 +131,29 @@ const VERSION_DATE_RULES = Object.entries(VERSION_RULES.minor)
   })
   .sort((a, b) => a.major - b.major || a.minor - b.minor || a.half - b.half);
 
-const findNearestDateRule = (version) => {
+const compareDates = (date1, date2) => {
+  const dt1 = new Date(date1);
+  const dt2 = new Date(date2);
+
+  if (dt1 < dt2) return -1;
+  if (dt1 > dt2) return 1;
+  return 0;
+};
+
+const isValidDate = (date) => {
+  if (typeof date !== "string") return false;
+
+  const match = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return false;
+
+  const [, year, month, day] = match.map(Number);
+
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+
+  return parsed.getUTCFullYear() === year && parsed.getUTCMonth() === month - 1 && parsed.getUTCDate() === day;
+};
+
+const findNearestRuleByVersion = (version) => {
   let i = VERSION_DATE_RULES.length - 1;
 
   while (i > 0) {
@@ -151,8 +173,24 @@ const findNearestDateRule = (version) => {
   return VERSION_DATE_RULES[i];
 };
 
+const findNearestRuleByDate = (date) => {
+  let i = VERSION_DATE_RULES.length - 1;
+
+  while (i > 0) {
+    const rule = VERSION_DATE_RULES[i];
+
+    if (compareDates(rule.start, date) <= 0) {
+      break;
+    }
+
+    i--;
+  }
+
+  return VERSION_DATE_RULES[i];
+};
+
 const getVersionDate = (version) => {
-  const { major, minor, half, start } = findNearestDateRule(version);
+  const { major, minor, half, start } = findNearestRuleByVersion(version);
 
   let v = new Version(major, minor, half, new Date(start));
 
@@ -271,12 +309,49 @@ class Version {
 
 // TODO 日付を含むバージョン取得と日付によるバージョン範囲取得を実装する
 
-const getCurrentVersion = async () => {
-  return { num: 10 };
+const getVersionByDate = async (date, raw = false) => {
+  if (!isValidDate(date)) {
+    throw new Error("Invalid date");
+  }
+
+  const rule = findNearestRuleByDate(date);
+
+  if (compareDates(rule.start, date) > 0) {
+    throw new Error("Invalid date");
+  }
+
+  let v = new Version(rule.major, rule.minor, rule.half, rule.start);
+
+  while (true) {
+    if (compareDates(v.start, date) <= 0 && compareDates(v.end, date) >= 0) {
+      break;
+    }
+
+    v = v.next;
+  }
+
+  if (raw) {
+    return v;
+  }
+
+  return v.data;
 };
 
 const getVersionsByDateRange = async (dateFrom, dateTo) => {
-  return { dateFrom, dateTo };
+  if (!isValidDate(dateFrom) || !isValidDate(dateTo) || compareDates(dateFrom, dateTo) >= 0) {
+    throw new Error("Invalid date range");
+  }
+
+  let v = await getVersionByDate(dateFrom, true);
+
+  const res = [v.data];
+
+  while (compareDates(v.end, dateTo) < 0) {
+    v = v.next;
+    res.push(v.data);
+  }
+
+  return res;
 };
 
 const getVersionsByVersionRange = async (versionFrom, versionTo) => {
@@ -297,9 +372,20 @@ const getVersionsByVersionRange = async (versionFrom, versionTo) => {
   return res;
 };
 
+const getVersionByVersionName = async (version) => {
+  const versions = await getVersionsByVersionRange(version, version);
+
+  if (versions.length === 1) {
+    return versions[0];
+  }
+
+  throw new Error("Invalid version");
+};
+
 const version = {
-  getCurrentVersion,
+  getVersionByDate,
   getVersionsByDateRange,
+  getVersionByVersionName,
   getVersionsByVersionRange,
 };
 
