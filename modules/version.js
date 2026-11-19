@@ -269,6 +269,8 @@ class Version {
   }
 }
 
+// TODO 日付を含むバージョン取得と日付によるバージョン範囲取得を実装する
+
 const getCurrentVersion = async () => {
   return { num: 10 };
 };
