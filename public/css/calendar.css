@@ -116,7 +116,7 @@
   flex-direction: column;
   justify-content: space-between;
 
-  aspect-ratio: 5 / 3;
+  aspect-ratio: 15 / 8;
 
   padding-block: 8px;
   padding-inline: 10px;
@@ -145,9 +145,10 @@
 .calendar__info {
   display: inline-block;
 
-  padding-block: 2px;
-  padding-inline: 5px;
+  padding-block: 3px;
+  padding-inline: 6px;
 
+  background: var(--color-surface-hover);
   border: solid 1px var(--color-accent);
   border-radius: 3px;
 

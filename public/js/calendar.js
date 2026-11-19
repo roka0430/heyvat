@@ -40,7 +40,6 @@ const enrichCalendarCells = (cells) => {
 
     if (cell.dt && isToday(cell.dt)) {
       cell.classes.push("is-today");
-      cell.infos.push("今日");
     }
 
     if (cell.date === 1) {
