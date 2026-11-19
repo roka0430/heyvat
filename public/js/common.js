@@ -2,7 +2,6 @@ document.addEventListener("alpine:init", () => {
   Alpine.store("toast", {
     messages: [],
 
-    // TODO typeに対応させる
     show(message, type) {
       const id = Date.now() + Math.random();
 

@@ -2,8 +2,10 @@
   <template x-for="message in $store.toast.messages" :key="message.id">
     <div
       class="app-toast__card"
-      :class="{'leaving': message.leaving}">
-      <div class="app-toast__message" x-text="message.message"></div>
+      :class="{ 'leaving': message.leaving, [message.type]: true }">
+      <div class="app-toast__clip">
+        <div class="app-toast__message" x-text="message.message"></div>
+      </div>
     </div>
   </template>
 </div>

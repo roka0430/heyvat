@@ -20,6 +20,18 @@
 
   --color-border: #d8e0e8;
   --color-accent: #3986a8;
+
+  --color-info: #3986a8;
+  --color-info-bg: #e8f2f7;
+
+  --color-success: #348568;
+  --color-success-bg: #e8f4ee;
+
+  --color-warning: #b78332;
+  --color-warning-bg: #fbf2e3;
+
+  --color-error: #c45b5b;
+  --color-error-bg: #f9ebeb;
 }
 
 :root.dark {
@@ -32,6 +44,18 @@
 
   --color-border: #2b3949;
   --color-accent: #78b9d4;
+
+  --color-info: #78b9d4;
+  --color-info-bg: #1d3542;
+
+  --color-success: #72c5a0;
+  --color-success-bg: #1d3a30;
+
+  --color-warning: #e2b66c;
+  --color-warning-bg: #403522;
+
+  --color-error: #e18a8a;
+  --color-error-bg: #40292b;
 }
 
 * {
@@ -212,22 +236,18 @@ html:not(.dark) .app-header__logo {
 }
 
 .app-toast__card {
-  width: var(--toast-width);
-  height: var(--toast-height);
+  display: grid;
+  grid-template-rows: 1fr;
 
-  background: var(--color-accent);
+  width: var(--toast-width);
+
   border-radius: 5px;
 
   font-size: 0.9rem;
 
   animation: toast-fade-in 0.15s ease-in forwards;
-  transform: all 0.15s;
-
+  transition: all 0.15s;
   overflow: hidden;
-}
-
-.app-toast__card.leaving {
-  animation: toast-leaving 0.3s ease-in forwards;
 }
 
 @keyframes toast-fade-in {
@@ -240,26 +260,60 @@ html:not(.dark) .app-header__logo {
   }
 }
 
+.app-toast__card.info {
+  background: var(--color-info-bg);
+  border: solid 1px var(--color-info);
+  color: var(--color-info);
+}
+
+.app-toast__card.success {
+  background: var(--color-success-bg);
+  border: solid 1px var(--color-success);
+  color: var(--color-success);
+}
+
+.app-toast__card.warning {
+  background: var(--color-warning-bg);
+  border: solid 1px var(--color-warning);
+  color: var(--color-warning);
+}
+
+.app-toast__card.error {
+  background: var(--color-error-bg);
+  border: solid 1px var(--color-error);
+  color: var(--color-error);
+}
+
+.app-toast__card.leaving {
+  animation: toast-leaving 0.25s ease-in forwards;
+}
+
 @keyframes toast-leaving {
   0% {
+    grid-template-rows: 1fr;
     width: var(--toast-width);
-    height: var(--toast-height);
+    border-width: 1px;
   }
 
   60% {
+    grid-template-rows: 1fr;
     width: 0;
-    height: var(--toast-height);
+    border-width: 1px;
   }
 
   100% {
+    grid-template-rows: 0fr;
     width: 0;
-    height: 0;
+    border-width: 0;
   }
 }
-.app-toast__message {
-  width: var(--toast-width);
-  height: var(--toast-height);
 
+.app-toast__clip {
+  width: var(--toast-width);
+  min-height: 0;
+}
+
+.app-toast__message {
   padding-block: 10px;
   padding-inline: 12px;
 }

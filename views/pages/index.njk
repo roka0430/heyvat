@@ -12,6 +12,12 @@
 {% block content %}
   <main class="app-main">
     <h1>Home</h1>
+    <div x-data>
+      <button @click="$store.toast.show('aaa', 'info')">info</button>
+      <button @click="$store.toast.show('aaa', 'success')">success</button>
+      <button @click="$store.toast.show('aaa', 'warning')">warning</button>
+      <button @click="$store.toast.show('aaa', 'error')">error</button>
+    </div>
   </main>
 {% endblock %}
 
