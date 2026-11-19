@@ -12,7 +12,7 @@
   --font-sans: "Inter", "Line Seed JP", sans-serif;
 
   --color-background: #f2f5f8;
-  --color-surface: #ffffff;
+  --color-surface: #f8fbfe;
   --color-surface-hover: #e8eef3;
 
   --color-text: #263442;
@@ -32,12 +32,6 @@
 
   --color-error: #c45b5b;
   --color-error-bg: #f9ebeb;
-
-  --color-sunday: #c45b5b;
-  --color-sunday-bg: #fcf3f3;
-
-  --color-saturday: #3986a8;
-  --color-saturday-bg: #e8f2f7;
 }
 
 :root.dark {
@@ -62,12 +56,6 @@
 
   --color-error: #e18a8a;
   --color-error-bg: #40292b;
-
-  --color-sunday: #e18a8a;
-  --color-sunday-bg: #493034;
-
-  --color-saturday: #78b9d4;
-  --color-saturday-bg: #243e50;
 }
 
 * {

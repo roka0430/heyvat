@@ -1,3 +1,25 @@
+:root {
+  --color-sunday: #c45b5b;
+  --color-sunday-bg: #fcf3f3;
+
+  --color-saturday: #3986a8;
+  --color-saturday-bg: #e8f2f7;
+
+  --color-today: #c49a35;
+  --color-today-bg: #fff8df;
+}
+
+:root.dark {
+  --color-sunday: #e18a8a;
+  --color-sunday-bg: #493034;
+
+  --color-saturday: #78b9d4;
+  --color-saturday-bg: #243e50;
+
+  --color-today: #e2bd68;
+  --color-today-bg: #493f29;
+}
+
 .calendar {
   display: flex;
   flex-direction: column;
@@ -76,6 +98,7 @@
 .calendar__weekday {
   padding-block: 5px;
 
+  background: var(--color-surface);
   border: solid 0.5px var(--color-border);
 
   font-size: 0.9rem;
@@ -92,7 +115,14 @@
   aspect-ratio: 5 / 3;
   padding: 8px;
 
+  background: var(--color-surface);
   border: solid 0.5px var(--color-border);
 
   font-size: 0.9rem;
+}
+
+.calendar__day.is-today {
+  background: var(--color-today-bg);
+  color: var(--color-today);
+  font-weight: bold;
 }

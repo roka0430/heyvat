@@ -61,7 +61,8 @@
         </div>
         <div class="calendar__days">
           <template x-for="cell in cells" :key="cell.key">
-            <div class="calendar__day" x-text="cell.date"></div>
+            <div class="calendar__day" x-text="cell.date" :class="cell.classes">
+            </div>
           </template>
         </div>
       </div>
