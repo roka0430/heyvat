@@ -1,0 +1,12 @@
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings__item {
+}
+
+.settings__label {
+  font-weight: bold;
+}

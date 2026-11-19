@@ -212,13 +212,6 @@ html:not(.dark) .app-header__logo {
   }
 }
 
-/* main */
-
-.app-main {
-  grid-area: main;
-  min-width: 0;
-}
-
 /* toast */
 
 .app-toast {
@@ -316,4 +309,18 @@ html:not(.dark) .app-header__logo {
 .app-toast__message {
   padding-block: 10px;
   padding-inline: 12px;
+}
+
+/* main */
+
+.app-main {
+  grid-area: main;
+  min-width: 0;
+}
+
+.app-main__page-title {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+
+  border-bottom: solid 1px var(--color-border);
 }

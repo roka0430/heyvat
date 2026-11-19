@@ -3,6 +3,7 @@
 {% set pageId = "settings" %}
 
 {% block styles %}
+  <link rel="stylesheet" href="/css/settings.css" />
 {% endblock %}
 
 {% block title %}
@@ -11,7 +12,24 @@
 
 {% block content %}
   <main class="app-main">
-    <h1>Settings</h1>
+    <h2 class="app-main__page-title">設定</h2>
+    <div class="settings">
+      <div class="settings__item">
+        <label class="settings__label">テーマ</label>
+        <div class="settings__content">
+          <select name="" id="">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+          </select>
+        </div>
+      </div>
+      <div class="settings__item">
+        <label class="settings__label">UID</label>
+        <div class="settings__content">
+          <input type="number" value="{{ uid }}" />
+        </div>
+      </div>
+    </div>
   </main>
 {% endblock %}
 
