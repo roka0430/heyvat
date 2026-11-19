@@ -54,15 +54,6 @@ const setupPagesRouting = async (dir, route = "") => {
 
 app.post("/api/resources/refresh", async (req, res) => {});
 
-app.get("/api/versions/current", async (req, res) => {
-  try {
-    const versions = await version.getCurrentVersion();
-    res.json(versions);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to get current version" });
-  }
-});
-
 app.get("/api/versions", async (req, res) => {
   const { date, dateFrom, dateTo, version: versionValue, versionFrom, versionTo } = req.query;
 
@@ -75,7 +66,7 @@ app.get("/api/versions", async (req, res) => {
 
   const specifiedCount = Object.values(conditions).filter(Boolean).length;
 
-  if (specifiedCount !== 1) {
+  if (specifiedCount > 1) {
     return res.status(400).json({
       error: "Specify exactly one search condition",
     });
@@ -123,6 +114,15 @@ app.get("/api/versions", async (req, res) => {
         error: "Invalid version range",
       });
     }
+  }
+
+  try {
+    const versions = await version.getCurrentAndNextVersions();
+    return res.json(versions);
+  } catch (error) {
+    return res.status(400).json({
+      error: "Failed to get version",
+    });
   }
 });
 

@@ -390,17 +390,24 @@ const getVersionByVersionName = async (version) => {
   throw new Error("Invalid version");
 };
 
-const getCurrentVersion = async () => {
+const getCurrentAndNextVersions = async () => {
   const now = new Date();
-  return await getVersionByDate(formatDate(now));
+
+  const current = await getVersionByDate(formatDate(now), true);
+  const next = current.next;
+
+  return {
+    current: current.data,
+    next: next.data,
+  };
 };
 
 const version = {
-  getCurrentVersion,
   getVersionByDate,
   getVersionsByDateRange,
   getVersionByVersionName,
   getVersionsByVersionRange,
+  getCurrentAndNextVersions,
 };
 
 export default version;
