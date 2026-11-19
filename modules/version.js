@@ -2,6 +2,9 @@ import settings from "./settings.js";
 
 const VERSION_RULES = {
   major: {
+    1: {
+      maxMinor: 6,
+    },
     6: {
       maxMinor: 7,
     },
@@ -10,7 +13,58 @@ const VERSION_RULES = {
     "1.0.0": {
       start: "2020-09-28",
     },
+    "1.0.1": {
+      start: "2020-10-20",
+      end: "2020-11-09",
+    },
+    "2.0.0": {
+      start: "2021-07-21",
+    },
+    "2.6.1": {
+      end: "2022-05-31",
+    },
+    "2.7.0": {
+      start: "2022-05-31",
+      end: "2022-06-21",
+    },
+    "2.7.1": {
+      start: "2022-06-21",
+      end: "2022-07-12",
+    },
+    "3.0.0": {
+      end: "2022-09-09",
+    },
+    "3.0.1": {
+      start: "2022-09-09",
+      end: "2022-09-27",
+    },
+    "3.1.0": {
+      start: "2022-09-28",
+      end: "2022-10-14",
+    },
+    "3.1.1": {
+      start: "2022-10-14",
+      end: "2022-11-01",
+    },
+    "3.2.0": {
+      start: "2022-11-02",
+      end: "2022-11-18",
+    },
+    "3.2.1": {
+      start: "2022-11-18",
+      end: "2022-12-06",
+    },
+    "3.3.0": {
+      start: "2022-12-07",
+    },
+    "4.0.0": {
+      start: "2023-08-16",
+    },
+    "5.0.0": {
+      start: "2024-08-28",
+    },
     "6.0.0": {
+      start: "2025-09-10",
       displayName: "Luna Ⅰ",
     },
     "6.0.1": {
@@ -65,7 +119,7 @@ const VERSION_RULES = {
 };
 
 const VERSION_DATE_RULES = Object.entries(VERSION_RULES.minor)
-  .filter(([_, rule]) => "start" in rule || "end" in rule)
+  .filter(([_, rule]) => "start" in rule)
   .map(([version, rule]) => {
     const [major, minor, half] = version.split(".").map(Number);
     return {
@@ -167,6 +221,12 @@ class Version {
   }
 
   get end() {
+    const rule = VERSION_RULES.minor?.[this.name];
+
+    if (rule?.end) {
+      return new Date(rule.end);
+    }
+
     if (this.half === 0) {
       return addDays(this.start, 20);
     }
@@ -183,7 +243,7 @@ class Version {
       return new Version(this.major, this.minor + 1, 0, addDays(this.start, 22));
     }
 
-    return new Version(this.major + 1, 0, 0, addDays(this.start, 20));
+    return new Version(this.major + 1, 0, 0, addDays(this.start, 22));
   }
 
   get data() {
