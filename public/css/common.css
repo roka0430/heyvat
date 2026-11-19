@@ -87,6 +87,12 @@ a {
   text-decoration: none;
 }
 
+button,
+input,
+textarea {
+  font-family: var(--font-sans);
+}
+
 [x-cloak] {
   display: none !important;
 }

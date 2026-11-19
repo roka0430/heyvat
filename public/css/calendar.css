@@ -4,6 +4,53 @@
   gap: 10px;
 }
 
+.calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar__year-month {
+  display: flex;
+}
+
+.calendar__actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.calendar__actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 25px;
+  min-width: 25px;
+
+  padding-inline: 8px;
+
+  background: none;
+  border: solid 1px var(--color-border);
+  border-radius: 5px;
+
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.calendar__actions button:has(svg) {
+  padding: 0;
+}
+
+.calendar__actions button:hover {
+  color: var(--color-text);
+}
+
+.calendar__actions button svg {
+  transform: translateY();
+}
+
 .calendar__body {
   border: solid 0.5px var(--color-border);
 }
