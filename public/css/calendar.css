@@ -108,6 +108,7 @@
 .calendar__days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+
   border-collapse: collapse;
 }
 
@@ -116,7 +117,7 @@
   flex-direction: column;
   justify-content: space-between;
 
-  aspect-ratio: 15 / 8;
+  aspect-ratio: 5 / 4;
 
   padding-block: 8px;
   padding-inline: 10px;

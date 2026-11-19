@@ -96,6 +96,8 @@ textarea {
   grid-template-rows: auto minmax(0, 1fr);
   gap: 20px 24px;
 
+  min-height: 100vh;
+
   padding-block: 20px 32px;
   padding-inline: 24px;
 }
@@ -322,6 +324,10 @@ html:not(.dark) .app-header__logo {
 
 .app-main {
   grid-area: main;
+
+  display: flex;
+  flex-direction: column;
+
   min-width: 0;
 }
 
