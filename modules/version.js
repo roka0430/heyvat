@@ -145,23 +145,15 @@ class Version {
   }
 
   get name() {
-    return `${this.major}.${this.minor}`;
-  }
-
-  get fullName() {
     return `${this.major}.${this.minor}.${this.half}`;
   }
 
-  get localizedName() {
-    return `${this.major}.${this.minor}${["前半", "後半"][this.half]}`;
-  }
-
   get displayName() {
-    return VERSION_RULES.minor?.[this.fullName]?.displayName ?? null;
+    return VERSION_RULES.minor?.[this.name]?.displayName ?? null;
   }
 
   get start() {
-    const rule = VERSION_RULES.minor?.[this.fullName];
+    const rule = VERSION_RULES.minor?.[this.name];
 
     if (rule?.start) {
       return new Date(rule.start);
@@ -194,6 +186,17 @@ class Version {
     return new Version(this.major + 1, 0, 0, addDays(this.start, 20));
   }
 
+  get data() {
+    return {
+      major: this.major,
+      minor: this.minor,
+      half: this.half,
+      start: this.start,
+      end: this.end,
+      ...(this.displayName && { name: this.displayName }),
+    };
+  }
+
   compare(other) {
     other = other instanceof Version ? other : new Version(other);
 
@@ -215,14 +218,21 @@ const getVersionsByDateRange = async (dateFrom, dateTo) => {
 };
 
 const getVersionsByVersionRange = async (versionFrom, versionTo) => {
-  const from = new Version(versionFrom);
+  let v = new Version(versionFrom);
   const to = new Version(versionTo);
 
-  if (!from.isValid || !to.isValid || from.compare(to) > 0) {
+  if (!v.isValid || !to.isValid || v.compare(to) > 0) {
     throw new Error("Invalid version range");
   }
 
-  return { from: from.end, versionTo };
+  const res = [v.data];
+
+  while (v.compare(to) < 0) {
+    v = v.next;
+    res.push(v.data);
+  }
+
+  return res;
 };
 
 const version = {
