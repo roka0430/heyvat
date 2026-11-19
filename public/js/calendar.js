@@ -36,9 +36,19 @@ const createCalendarCells = (year, month) => {
 const enrichCalendarCells = (cells) => {
   for (const cell of cells) {
     cell.classes = [];
+    cell.infos = [];
 
     if (cell.dt && isToday(cell.dt)) {
       cell.classes.push("is-today");
+      cell.infos.push("今日");
+    }
+
+    if (cell.date === 1) {
+      cell.infos.push("深境螺旋");
+    }
+
+    if (cell.date === 16) {
+      cell.infos.push("幻想シアター");
     }
   }
 

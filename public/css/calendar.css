@@ -112,17 +112,45 @@
 }
 
 .calendar__day {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   aspect-ratio: 5 / 3;
-  padding: 8px;
+
+  padding-block: 8px;
+  padding-inline: 10px;
 
   background: var(--color-surface);
   border: solid 0.5px var(--color-border);
-
-  font-size: 0.9rem;
 }
 
 .calendar__day.is-today {
   background: var(--color-today-bg);
   color: var(--color-today);
+}
+
+.calendar__date {
+  font-size: 0.9rem;
+}
+
+.calendar__day.is-today .calendar__date {
   font-weight: bold;
+}
+
+.calendar__infos {
+  text-align: center;
+}
+
+.calendar__info {
+  display: inline-block;
+
+  padding-block: 2px;
+  padding-inline: 5px;
+
+  border: solid 1px var(--color-accent);
+  border-radius: 3px;
+
+  color: var(--color-accent);
+  font-size: 0.8rem;
 }

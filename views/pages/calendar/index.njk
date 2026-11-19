@@ -61,7 +61,13 @@
         </div>
         <div class="calendar__days">
           <template x-for="cell in cells" :key="cell.key">
-            <div class="calendar__day" x-text="cell.date" :class="cell.classes">
+            <div class="calendar__day" :class="cell.classes">
+              <div class="calendar__date" x-text="cell.date"></div>
+              <div class="calendar__infos">
+                <template x-for="info in cell.infos" :key="info">
+                  <div class="calendar__info" x-text="info"></div>
+                </template>
+              </div>
             </div>
           </template>
         </div>
