@@ -280,6 +280,15 @@ class Version {
     return addDays(this.start, 21);
   }
 
+  get preview() {
+    if (this.half === 1) {
+      return null;
+    }
+
+    const twoWeeksAgo = addDays(this.start, -14);
+    return addDays(twoWeeksAgo, 5 - twoWeeksAgo.getDay());
+  }
+
   get next() {
     if (this.half === 0) {
       return new Version(this.major, this.minor, 1, addDays(this.start, 20));
@@ -299,6 +308,7 @@ class Version {
       half: this.half,
       start: this.start,
       end: this.end,
+      ...(this.preview && { preview: this.preview }),
       ...(this.displayName && { name: this.displayName }),
     };
   }
@@ -314,8 +324,6 @@ class Version {
     return 0;
   }
 }
-
-// TODO 日付を含むバージョン取得と日付によるバージョン範囲取得を実装する
 
 const getVersionByDate = async (date, raw = false) => {
   if (!isValidDate(date)) {
