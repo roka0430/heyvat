@@ -14,7 +14,12 @@
   <main class="app-main">
     <h2 class="app-main__page-title">カレンダー</h2>
     <div class="calendar" x-data="calendar">
-      <div class="calendar__header">header</div>
+      <div class="calendar__header">
+        <span x-text="year"></span>年
+        <span x-text="month"></span>月
+        <button @click="changeMonth(-1)">prev</button>
+        <button @click="changeMonth(1)">next</button>
+      </div>
       <div class="calendar__body">
         <div class="calendar__weekdays">
           <template x-for="weekday in weekdays" :key="weekday.value">
