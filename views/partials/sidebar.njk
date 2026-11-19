@@ -51,7 +51,7 @@
     <a
       href="/simulator"
       class="app-sidebar__item {{ 'current' if pageId == 'simulator' }}"
-      title="シミュレータ">
+      title="シミュレーター">
       <span class="app-sidebar__logo">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +76,55 @@
           <path d="M8 18h.01" />
         </svg>
       </span>
-      <span class="app-sidebar__title">シミュレータ</span>
+      <span class="app-sidebar__title">シミュレーター</span>
+    </a>
+    <a
+      href="/characters"
+      class="app-sidebar__item {{ 'current' if pageId == 'characters' }}"
+      title="キャラクター">
+      <span class="app-sidebar__logo">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-id-card preview-icon">
+          <path d="M13 19a4 4 0 00-8 0" />
+          <path d="M16 10h2" />
+          <path d="M16 14h2" />
+          <circle cx="9" cy="12" r="3" />
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+        </svg>
+      </span>
+      <span class="app-sidebar__title">キャラクター</span>
+    </a>
+    <a
+      href="/artifacts"
+      class="app-sidebar__item {{ 'current' if pageId == 'artifacts' }}"
+      title="聖遺物">
+      <span class="app-sidebar__logo">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-feather preview-icon">
+          <path d="M14.086 18.412A2 2 0 0112.67 19H5v-7.672a2 2 0 01.586-1.414L11.75 3.75a6 6 0 118.49 8.49z" />
+          <path d="M16 8 2 22" />
+          <path d="M17.488 15H9" />
+        </svg>
+      </span>
+      <span class="app-sidebar__title">聖遺物</span>
     </a>
     <div class="app-sidebar__separator"></div>
     <div
