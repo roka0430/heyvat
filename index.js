@@ -56,11 +56,9 @@ app.post("/api/resources/refresh", async (req, res) => {});
 
 app.get("/api/versions/current", async (req, res) => {
   try {
-    const now = new Date();
-    const versions = await version.getVersionsByDateRange(now, now);
+    const versions = await version.getCurrentVersion();
     res.json(versions);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to get current version" });
   }
 });

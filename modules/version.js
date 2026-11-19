@@ -131,6 +131,14 @@ const VERSION_DATE_RULES = Object.entries(VERSION_RULES.minor)
   })
   .sort((a, b) => a.major - b.major || a.minor - b.minor || a.half - b.half);
 
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
 const compareDates = (date1, date2) => {
   const dt1 = new Date(date1);
   const dt2 = new Date(date2);
@@ -382,7 +390,13 @@ const getVersionByVersionName = async (version) => {
   throw new Error("Invalid version");
 };
 
+const getCurrentVersion = async () => {
+  const now = new Date();
+  return await getVersionByDate(formatDate(now));
+};
+
 const version = {
+  getCurrentVersion,
   getVersionByDate,
   getVersionsByDateRange,
   getVersionByVersionName,
