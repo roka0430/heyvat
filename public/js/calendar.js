@@ -8,6 +8,14 @@ const isToday = (dt) => {
   return isSameDay(dt, new Date());
 };
 
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
 const getDatesInMonth = (year, month) => {
   const lastDate = new Date(year, month, 0).getDate();
   return Array.from({ length: lastDate }, (_, i) => new Date(year, month - 1, i + 1));
@@ -33,10 +41,42 @@ const createCalendarCells = (year, month) => {
   return cells;
 };
 
-const enrichCalendarCells = (cells) => {
+const getCalendarVersionData = async (year, month) => {
+  const dtFrom = new Date(year, month - 1, 1);
+  const dtTo = new Date(year, month, 1);
+
+  const res = await fetch(`/api/versions?dateFrom=${formatDate(dtFrom)}&dateTo=${formatDate(dtTo)}`);
+
+  if (!res.ok) {
+    return [];
+  }
+
+  const versions = await res.json();
+  const infos = {};
+
+  for (const version of versions) {
+    infos[formatDate(new Date(version.start))] = `${version.major}.${version.minor}${["前半", "後半"][version.half]}`;
+
+    if ("preview" in version) {
+      infos[formatDate(new Date(version.preview))] = `${version.major}.${version.minor}予告番組`;
+    }
+  }
+
+  return infos;
+};
+
+const enrichCalendarCells = async (cells, year, month) => {
+  const versionData = await getCalendarVersionData(year, month);
+
   for (const cell of cells) {
     cell.classes = [];
     cell.infos = [];
+
+    const dateString = formatDate(new Date(year, month - 1, cell.date));
+
+    if (dateString in versionData) {
+      cell.infos.push(versionData[dateString]);
+    }
 
     if (cell.dt && isToday(cell.dt)) {
       cell.classes.push("is-today");
@@ -54,9 +94,9 @@ const enrichCalendarCells = (cells) => {
   return cells;
 };
 
-const getCalendarCells = (year, month) => {
+const getCalendarCells = async (year, month) => {
   const cells = createCalendarCells(year, month);
-  const enrichedCells = enrichCalendarCells(cells);
+  const enrichedCells = await enrichCalendarCells(cells, year, month);
   return enrichedCells.map(({ dt, ...rest }) => rest);
 };
 
