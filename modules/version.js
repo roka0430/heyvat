@@ -289,6 +289,14 @@ class Version {
     return addDays(twoWeeksAgo, 5 - twoWeeksAgo.getDay());
   }
 
+  get stygian() {
+    if (this.half === 1) {
+      return null;
+    }
+
+    return addDays(this.start, 7);
+  }
+
   get next() {
     if (this.half === 0) {
       return new Version(this.major, this.minor, 1, addDays(this.start, 20));
@@ -309,6 +317,7 @@ class Version {
       start: this.start,
       end: this.end,
       ...(this.preview && { preview: this.preview }),
+      ...(this.stygian && { stygian: this.stygian }),
       ...(this.displayName && { name: this.displayName }),
     };
   }
