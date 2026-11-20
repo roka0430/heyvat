@@ -117,11 +117,11 @@ app.get("/api/versions", async (req, res) => {
   }
 
   try {
-    const versions = await version.getCurrentAndNextVersions();
-    return res.json(versions);
+    const versionData = await version.getCurrentVersion();
+    return res.json(versionData);
   } catch (error) {
     return res.status(400).json({
-      error: "Failed to get version",
+      error: "Failed to get current version",
     });
   }
 });

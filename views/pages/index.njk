@@ -14,9 +14,10 @@
   <main class="app-main">
     <h2 class="app-main__page-title">ダッシュボード</h2>
     <div class="dashboard">
-      <section class="dashboard__events dashboard-events">
+      <section class="dashboard__events dashboard-events" x-data="events">
         <div class="dashboard-events__card">
           <h4>バージョン</h4>
+          <div x-text="currentVersionName"></div>
           <div class="dashboard-events__next">まで16日</div>
         </div>
         <div class="dashboard-events__card">
@@ -41,4 +42,5 @@
 {% endblock %}
 
 {% block scripts %}
+  <script src="/js/dashboard.js" defer></script>
 {% endblock %}
