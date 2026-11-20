@@ -1,4 +1,29 @@
-import settings from "./settings.js";
+const TIME_RULES = {
+  start: [
+    [12, 0],
+    [19, 0],
+  ],
+  end: [
+    [18, 59],
+    [15, 59],
+  ],
+  preview: [
+    [21, 0],
+    [21, 0],
+  ],
+  stygianStart: [
+    [11, 0],
+    [11, 0],
+  ],
+  stygianEnd: [
+    [4, 59],
+    [4, 59],
+  ],
+  stygianDisturbanceEnd: [
+    [4, 59],
+    [4, 59],
+  ],
+};
 
 const VERSION_RULES = {
   major: {
@@ -289,12 +314,28 @@ class Version {
     return addDays(twoWeeksAgo, 5 - twoWeeksAgo.getDay());
   }
 
-  get stygian() {
+  get stygianStart() {
     if (this.half === 1) {
       return null;
     }
 
     return addDays(this.start, 7);
+  }
+
+  get stygianEnd() {
+    if (this.half === 1) {
+      return null;
+    }
+
+    return addDays(this.start, 41);
+  }
+
+  get stygianDisturbanceEnd() {
+    if (this.half === 1) {
+      return null;
+    }
+
+    return addDays(this.start, 17);
   }
 
   get next() {
@@ -310,15 +351,33 @@ class Version {
   }
 
   get data() {
+    const withTime = (date, type) => {
+      if (!date || !TIME_RULES[type]) {
+        return undefined;
+      }
+
+      const result = new Date(date);
+      const [hour, minute] = TIME_RULES[type][this.half];
+
+      result.setHours(hour, minute, 0, 0);
+      return result;
+    };
+
     return {
       major: this.major,
       minor: this.minor,
       half: this.half,
-      start: this.start,
-      end: this.end,
-      ...(this.preview && { preview: this.preview }),
-      ...(this.stygian && { stygian: this.stygian }),
+      start: withTime(this.start, "start"),
+      end: withTime(this.end, "end"),
+      ...(this.preview && { preview: withTime(this.preview, "preview") }),
       ...(this.displayName && { name: this.displayName }),
+      ...(this.stygianStart && {
+        stygian: {
+          start: withTime(this.stygianStart, "stygianStart"),
+          end: withTime(this.stygianEnd, "stygianEnd"),
+          disturbance: withTime(this.stygianDisturbanceEnd, "stygianDisturbanceEnd"),
+        },
+      }),
     };
   }
 
