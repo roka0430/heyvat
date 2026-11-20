@@ -24,6 +24,10 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 0;
 }
 
 .calendar__header {
@@ -154,9 +158,21 @@
   padding-inline: 6px;
 
   background: var(--color-surface-hover);
-  border: solid 1px var(--color-accent);
+  border: solid 1px var(--color-info);
   border-radius: 3px;
 
-  color: var(--color-accent);
+  color: var(--color-info);
   font-size: 0.8rem;
+}
+
+.calendar__info.end {
+  border: solid 1px var(--color-warning);
+  color: var(--color-warning);
+}
+
+.calendar__info.event {
+  background: var(--color-info);
+  border: none;
+  border-radius: 50px;
+  color: white;
 }

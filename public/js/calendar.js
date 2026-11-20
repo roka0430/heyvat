@@ -41,24 +41,50 @@ const createCalendarCells = (year, month) => {
   return cells;
 };
 
-const getCalendarVersionData = async (year, month) => {
+const getVersionData = async (year, month) => {
   const dtFrom = new Date(year, month - 1, 1);
   const dtTo = new Date(year, month, 1);
 
-  const res = await fetch(`/api/versions?dateFrom=${formatDate(dtFrom)}&dateTo=${formatDate(dtTo)}`);
-
-  if (!res.ok) {
+  try {
+    const res = await fetch(`/api/versions?dateFrom=${formatDate(dtFrom)}&dateTo=${formatDate(dtTo)}`);
+    return await res.json();
+  } catch (error) {
+    console.error(error);
     return [];
   }
+};
 
-  const versions = await res.json();
+const getVersionDates = (versions) => {
   const infos = {};
 
   for (const version of versions) {
-    infos[formatDate(new Date(version.start))] = `${version.major}.${version.minor}${["前半", "後半"][version.half]}`;
+    infos[formatDate(new Date(version.start))] = {
+      message: `${version.major}.${version.minor}${["前半", "後半"][version.half]}`,
+      type: "start",
+    };
 
     if ("preview" in version) {
-      infos[formatDate(new Date(version.preview))] = `${version.major}.${version.minor}予告番組`;
+      infos[formatDate(new Date(version.preview))] = {
+        message: `${version.major}.${version.minor}予告番組`,
+        type: "event",
+      };
+    }
+
+    if ("stygian" in version) {
+      infos[formatDate(new Date(version.stygian.start))] = {
+        message: `幽境 開始`,
+        type: "start",
+      };
+
+      infos[formatDate(new Date(version.stygian.end))] = {
+        message: `幽境 終了`,
+        type: "end",
+      };
+
+      infos[formatDate(new Date(version.stygian.disturbance))] = {
+        message: `地脈活動期 終了`,
+        type: "end",
+      };
     }
   }
 
@@ -66,16 +92,17 @@ const getCalendarVersionData = async (year, month) => {
 };
 
 const enrichCalendarCells = async (cells, year, month) => {
-  const versionData = await getCalendarVersionData(year, month);
+  const versionData = await getVersionData(year, month);
+  const versionDates = getVersionDates(versionData);
 
   for (const cell of cells) {
     cell.classes = [];
     cell.infos = [];
 
-    const dateString = formatDate(new Date(year, month - 1, cell.date));
+    const dateString = cell.date ? formatDate(new Date(year, month - 1, cell.date)) : null;
 
-    if (dateString in versionData) {
-      cell.infos.push(versionData[dateString]);
+    if (dateString in versionDates) {
+      cell.infos.push(versionDates[dateString]);
     }
 
     if (cell.dt && isToday(cell.dt)) {
@@ -83,11 +110,17 @@ const enrichCalendarCells = async (cells, year, month) => {
     }
 
     if (cell.date === 1) {
-      cell.infos.push("深境螺旋");
+      cell.infos.push({
+        message: "幻想シアター",
+        type: "event",
+      });
     }
 
     if (cell.date === 16) {
-      cell.infos.push("幻想シアター");
+      cell.infos.push({
+        message: "深境螺旋",
+        type: "event",
+      });
     }
   }
 
