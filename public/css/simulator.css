@@ -1,0 +1,65 @@
+.simulator {
+  display: flex;
+  gap: 10px;
+}
+
+.simulator__input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.simulator__field {
+  position: relative;
+
+  margin-top: 10px;
+  padding-block: 12px 8px;
+  padding-inline: 12px;
+
+  border: solid 1px var(--color-border);
+  border-radius: 5px;
+}
+
+.simulator__field span {
+  position: absolute;
+  top: -2px;
+  left: 5px;
+  transform: translateY(-50%);
+
+  padding-inline: 5px;
+  background: var(--color-background);
+
+  color: var(--color-accent);
+  font-size: 0.8rem;
+}
+
+.simulator__field input {
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+.simulator__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 5px;
+  padding: 12px;
+
+  border: solid 1px var(--color-border);
+  border-radius: 5px;
+
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.simulator__toggle input {
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.simulator__output {
+}

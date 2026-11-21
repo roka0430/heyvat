@@ -3,6 +3,7 @@
 {% set pageId = "simulator" %}
 
 {% block styles %}
+  <link rel="stylesheet" href="/css/simulator.css" />
 {% endblock %}
 
 {% block title %}
@@ -12,8 +13,38 @@
 {% block content %}
   <main class="app-main">
     <h2 class="app-main__page-title">シミュレーター</h2>
+    <div class="simulator" x-data="simulator">
+      <section class="simulator__input">
+        <label class="simulator__field">
+          <span>目標数</span>
+          <input type="number" x-model.number="inputs.target" />
+        </label>
+        <label class="simulator__field">
+          <span>原石</span>
+          <input type="number" x-model.number="inputs.primo" />
+        </label>
+        <label class="simulator__field">
+          <span>紡がれた運命</span>
+          <input type="number" x-model.number="inputs.fate" />
+        </label>
+        <label class="simulator__field">
+          <span>スターライト</span>
+          <input type="number" x-model.number="inputs.starlight" />
+        </label>
+        <label class="simulator__field">
+          <span>天井カウント</span>
+          <input type="number" x-model.number="inputs.pity" />
+        </label>
+        <label class="simulator__toggle">
+          <span>前回すり抜け</span>
+          <input type="checkbox" x-model.boolean="inputs.guaranteed" />
+        </label>
+      </section>
+      <section class="simulator__output">output</section>
+    </div>
   </main>
 {% endblock %}
 
 {% block scripts %}
+  <script src="/js/simulator.js" defer></script>
 {% endblock %}
