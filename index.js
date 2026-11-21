@@ -7,6 +7,7 @@ import nunjucks from "nunjucks";
 import settings from "./modules/settings.js";
 import version from "./modules/version.js";
 import profiles from "./modules/profile.js";
+import simulator from "./modules/simulator.js";
 import builds from "./modules/builds.js";
 
 const app = express();
@@ -17,6 +18,7 @@ nunjucks.configure("views");
 app.engine("njk", nunjucks.render);
 app.set("view engine", "njk");
 app.use(express.static("public"));
+app.use(express.json());
 
 app.use(async (req, res, next) => {
   try {
@@ -155,6 +157,17 @@ app.put("/api/uid", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to update uid" });
+  }
+});
+
+app.post("/api/simulate", async (req, res) => {
+  try {
+    const { maxPulls, target, guaranteed = false } = req.body;
+    const probabilities = simulator.calculateProbabilities(maxPulls, target, { guaranteed });
+    res.json(probabilities);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to simulate" });
   }
 });
 
