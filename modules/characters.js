@@ -1,8 +1,7 @@
 import fs from "node:fs/promises";
 
 const getIconUrl = (iconName) => {
-  const formatted = iconName.replace(/\/ui\/(.*)\.png/g, "$1");
-  return `https://enka.network/ui/${formatted}.png`;
+  return `https://enka.network/ui/${iconName}.png`;
 };
 
 const getProfile = async () => {
