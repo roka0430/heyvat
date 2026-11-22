@@ -5,6 +5,7 @@ import express from "express";
 import nunjucks from "nunjucks";
 
 import settings from "./modules/settings.js";
+import resources from "./modules/resources.js";
 import version from "./modules/version.js";
 import profiles from "./modules/profile.js";
 import simulator from "./modules/simulator.js";
@@ -54,7 +55,15 @@ const setupPagesRouting = async (dir, route = "") => {
 
 // api
 
-app.post("/api/resources/refresh", async (req, res) => {});
+app.post("/api/resources/refresh", async (req, res) => {
+  try {
+    await resources.refresh();
+    return { message: "Resources update successfully" };
+  } catch (error) {
+    console.error(error);
+    return { message: "Failed to update resources" };
+  }
+});
 
 app.get("/api/versions", async (req, res) => {
   const { date, dateFrom, dateTo, version: versionValue, versionFrom, versionTo } = req.query;

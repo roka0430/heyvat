@@ -29,6 +29,16 @@
           <input type="number" value="{{ uid }}" />
         </div>
       </div>
+      <div class="settings__item">
+        <label class="settings__label">リソースの更新</label>
+        <div class="settings__content">
+          <form action="/api/resources/refresh" method="POST">
+            <button type="submit">
+              リソースを更新
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   </main>
 {% endblock %}
