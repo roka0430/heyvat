@@ -6,8 +6,7 @@ const STORED_FILE = path.join("data", "profile.json");
 const pending = new Map();
 
 const getIconUrl = (iconName) => {
-  const formatted = iconName.replace(/\/ui\/(.*)\.png/g, "$1");
-  return `https://enka.network/ui/${formatted}.png`;
+  return `https://enka.network/ui/${iconName}.png`;
 };
 
 const loadResource = async (filename) => {
@@ -100,10 +99,10 @@ const getUserInfo = async (uid) => {
     const playerInfo = profile.playerInfo;
 
     const namecards = await loadResource("namecards");
-    const icon = await loadResource("circle_icons");
+    const circle_icons = await loadResource("circle_icons");
 
     const nameCardUrl = getIconUrl(namecards[playerInfo.nameCardId]?.icon);
-    const iconUrl = getIconUrl(icon[playerInfo.profilePicture.id]?.IconPath);
+    const iconUrl = getIconUrl(circle_icons[playerInfo.profilePicture.id]);
 
     delete playerInfo.nameCardId;
     delete playerInfo.profilePicture;
