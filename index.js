@@ -162,9 +162,17 @@ app.put("/api/uid", async (req, res) => {
 
 app.post("/api/simulate", async (req, res) => {
   try {
-    const { maxPulls, target, guaranteed = false } = req.body;
+    const { pullsList, target, guaranteed = false } = req.body;
+    const maxPulls = Math.max(...pullsList);
+
     const probabilities = simulator.calculateProbabilities(maxPulls, target, { guaranteed });
-    res.json(probabilities);
+
+    const probabilitiesEntries = pullsList.map((pulls) => [
+      pulls,
+      pulls < probabilities.length ? probabilities[pulls] : 1,
+    ]);
+
+    res.json(Object.fromEntries(probabilitiesEntries));
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to simulate" });
