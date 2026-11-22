@@ -100,17 +100,17 @@ const getUserInfo = async (uid) => {
     const playerInfo = profile.playerInfo;
 
     const namecards = await loadResource("namecards");
-    const avatars = await loadResource("avatars");
+    const icon = await loadResource("circle_icons");
 
     const nameCardUrl = getIconUrl(namecards[playerInfo.nameCardId]?.icon);
-    const avatarUrl = getIconUrl(avatars[playerInfo.profilePicture.id]?.IconPath);
+    const iconUrl = getIconUrl(icon[playerInfo.profilePicture.id]?.IconPath);
 
     delete playerInfo.nameCardId;
     delete playerInfo.profilePicture;
     delete playerInfo.showNameCardIdList;
     delete playerInfo.showAvatarInfoList;
 
-    return { ...playerInfo, nameCardUrl, avatarUrl };
+    return { ...playerInfo, nameCardUrl, iconUrl };
   } catch (error) {
     console.error(error);
     return null;
