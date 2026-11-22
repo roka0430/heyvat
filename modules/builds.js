@@ -3,7 +3,7 @@ import fsPromises from "node:fs/promises";
 import path from "node:path";
 
 const textMap = JSON.parse(fs.readFileSync("./resources/text_map.json", "utf-8"));
-const characters = JSON.parse(fs.readFileSync("./resources/characters.json", "utf-8"));
+const characters = JSON.parse(fs.readFileSync("./resources/avatars.json", "utf-8"));
 
 // TODO path変換していろいろするところから
 
