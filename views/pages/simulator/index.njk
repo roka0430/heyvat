@@ -83,7 +83,10 @@
                 <td x-text="`${output.days}日`"></td>
                 <td x-text="`${output.primo}原石`"></td>
                 <td x-text="`${output.fate}連`"></td>
-                <td x-text="`${formatPercentage(output.probability)}%`"></td>
+                <td
+                  x-text="`${formatPercentage(output.probability)}%`"
+                  :class="{ 'achieved': Math.round(output.probability * 100) >= 100 }">
+                </td>
               </tr>
             </template>
           </tbody>
