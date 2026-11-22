@@ -1,4 +1,35 @@
 document.addEventListener("alpine:init", () => {
+  Alpine.data("user", () => ({
+    USER_INFO_KEY: "heyvat:user_info",
+
+    userInfo: {},
+
+    async init() {
+      this.userInfo = this.loadUserInfoCache();
+      this.userInfo = await this.loadUserInfo();
+      this.saveUserInfoCache();
+    },
+
+    loadUserInfoCache() {
+      const userInfoCache = localStorage.getItem(this.USER_INFO_KEY) ?? null;
+      return userInfoCache ? JSON.parse(userInfoCache) : {};
+    },
+
+    saveUserInfoCache() {
+      localStorage.setItem(this.USER_INFO_KEY, JSON.stringify(this.userInfo));
+    },
+
+    async loadUserInfo() {
+      try {
+        const res = await fetch("/api/user");
+        return res.json();
+      } catch (error) {
+        console.error(error);
+        return {};
+      }
+    },
+  }));
+
   Alpine.data("events", () => ({
     currentVersion: {
       major: null,

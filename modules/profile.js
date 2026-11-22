@@ -102,8 +102,8 @@ const getUserInfo = async (uid) => {
     const namecards = await loadResource("namecards");
     const avatars = await loadResource("avatars");
 
-    const nameCardUrl = getIconUrl(namecards[playerInfo.nameCardId].icon);
-    const avatarUrl = getIconUrl(avatars[playerInfo.profilePicture.id].IconPath);
+    const nameCardUrl = getIconUrl(namecards[playerInfo.nameCardId]?.icon);
+    const avatarUrl = getIconUrl(avatars[playerInfo.profilePicture.id]?.IconPath);
 
     delete playerInfo.nameCardId;
     delete playerInfo.profilePicture;

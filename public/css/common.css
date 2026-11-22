@@ -17,6 +17,8 @@
 
   --color-text: #263442;
   --color-text-muted: #758596;
+  --color-text-black: #263442;
+  --color-text-white: #e5e8ec;
 
   --color-border: #d8e0e8;
   --color-accent: #3986a8;
@@ -41,6 +43,8 @@
 
   --color-text: #e5e8ec;
   --color-text-muted: #8999aa;
+  --color-text-black: #263442;
+  --color-text-white: #e5e8ec;
 
   --color-border: #35485b;
   --color-accent: #78b9d4;
