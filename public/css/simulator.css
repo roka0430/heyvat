@@ -1,6 +1,6 @@
 .simulator {
   display: flex;
-  gap: 10px;
+  gap: 20px;
 }
 
 .simulator__input {
@@ -56,10 +56,40 @@
   cursor: pointer;
 }
 
+.simulator__calc-button {
+  margin-top: 5px;
+  padding-block: 8px;
+
+  background: none;
+  border: solid 1px var(--color-accent);
+  border-radius: 5px;
+
+  color: var(--color-accent);
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
 .simulator__toggle input {
   accent-color: var(--color-accent);
   cursor: pointer;
 }
 
 .simulator__output {
+  width: 100%;
+}
+
+.simulator__output table {
+  width: 100%;
+
+  border: solid 1px var(--color-border);
+  border-collapse: collapse;
+}
+
+.simulator__output table td,
+.simulator__output table th {
+  padding-block: 5px;
+  padding-inline: 8px;
+
+  border: solid 1px var(--color-border);
 }
