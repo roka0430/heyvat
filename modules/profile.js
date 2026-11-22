@@ -5,6 +5,21 @@ const STORED_FILE = path.join("data", "profile.json");
 
 const pending = new Map();
 
+const getIconUrl = (iconName) => {
+  const formatted = iconName.replace(/\/ui\/(.*)\.png/g, "$1");
+  return `https://enka.network/ui/${formatted}.png`;
+};
+
+const loadResource = async (filename) => {
+  try {
+    const content = await fs.readFile(`./resources/${filename}.json`, "utf-8");
+    return JSON.parse(content);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 const readStoredProfile = async () => {
   try {
     const content = await fs.readFile(STORED_FILE, "utf-8");
@@ -74,11 +89,35 @@ const fetchWithCache = async (uid, url) => {
   return promise;
 };
 
-const getProfile = (uid) => {
+const getProfile = async (uid) => {
   const url = `https://enka.network/api/uid/${uid}/`;
-  return fetchWithCache(uid, url);
+  return await fetchWithCache(uid, url);
+};
+
+const getUserInfo = async (uid) => {
+  try {
+    const profile = await getProfile(uid);
+    const playerInfo = profile.playerInfo;
+
+    const namecards = await loadResource("namecards");
+    const avatars = await loadResource("avatars");
+
+    const nameCardUrl = getIconUrl(namecards[playerInfo.nameCardId].icon);
+    const avatarUrl = getIconUrl(avatars[playerInfo.profilePicture.id].IconPath);
+
+    delete playerInfo.nameCardId;
+    delete playerInfo.profilePicture;
+    delete playerInfo.showNameCardIdList;
+    delete playerInfo.showAvatarInfoList;
+
+    return { ...playerInfo, nameCardUrl, avatarUrl };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
 export default {
   getProfile,
+  getUserInfo,
 };

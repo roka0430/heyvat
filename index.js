@@ -131,11 +131,22 @@ app.get("/api/versions", async (req, res) => {
 app.get("/api/profile", async (req, res) => {
   try {
     const uid = await settings.get("uid");
-    const data = await profiles.getProfiles(uid);
+    const data = await profiles.getProfile(uid);
     res.json(data);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch profile" });
+  }
+});
+
+app.get("/api/user", async (req, res) => {
+  try {
+    const uid = await settings.get("uid");
+    const data = await profiles.getUserInfo(uid);
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch user info" });
   }
 });
 
