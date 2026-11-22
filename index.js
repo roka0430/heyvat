@@ -150,6 +150,17 @@ app.get("/api/user", async (req, res) => {
   }
 });
 
+app.get("/api/avatars", async (req, res) => {
+  try {
+    const uid = await settings.get("uid");
+    const data = await profiles.getAvatarsInfo(uid);
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch avatars info" });
+  }
+});
+
 app.get("/api/uid", async (req, res) => {
   try {
     const uid = await settings.get("uid");

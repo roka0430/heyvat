@@ -117,7 +117,20 @@ const getUserInfo = async (uid) => {
   }
 };
 
+const getAvatarsInfo = async (uid) => {
+  try {
+    const profile = await getProfile(uid);
+    const avatarInfoList = profile.avatarInfoList;
+
+    return avatarInfoList;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export default {
   getProfile,
   getUserInfo,
+  getAvatarsInfo,
 };
