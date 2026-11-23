@@ -14,7 +14,6 @@ const loadResource = (filename) => {
 const resources = {
   avatars: loadResource("avatars"),
   textMap: loadResource("text_map"),
-  relics: loadResource("relics"),
   weapons: loadResource("weapons"),
 };
 
@@ -35,12 +34,11 @@ const getProfile = async () => {
 
 const getRelicInfoList = async (equipList = []) => {
   for (const equip of equipList) {
-    if (!(equip.itemId in resources.relics)) {
+    if (equip?.flat?.itemType !== "ITEM_RELIQUARY") {
       continue;
     }
 
-    const relic = resources.relics?.[equip.itemId];
-    console.log(relic);
+    console.log(equip?.flat);
   }
 };
 
@@ -54,8 +52,6 @@ const getWeaponInfoList = async (equipList = []) => {
     console.log(weapon);
   }
 };
-
-// TODO 聖遺物と武器のリスト作成から
 
 const getAvatarsInfo = async (uid) => {
   try {
