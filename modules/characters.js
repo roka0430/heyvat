@@ -1,4 +1,22 @@
-import fs from "node:fs/promises";
+import fs from "node:fs";
+import fsPromises from "node:fs/promises";
+
+const loadResource = (filename) => {
+  try {
+    const content = fs.readFileSync(`./resources/${filename}.json`, "utf-8");
+    return JSON.parse(content);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const resources = {
+  avatars: loadResource("avatars"),
+  textMap: loadResource("text_map"),
+  relics: loadResource("relics"),
+  weapons: loadResource("weapons"),
+};
 
 const getIconUrl = (iconName) => {
   return `https://enka.network/ui/${iconName}.png`;
@@ -6,7 +24,7 @@ const getIconUrl = (iconName) => {
 
 const getProfile = async () => {
   try {
-    const content = await fs.readFile("./data/backup.json", "utf-8");
+    const content = await fsPromises.readFile("./data/backup.json", "utf-8");
     const backup = JSON.parse(content);
     return backup.data;
   } catch (error) {
@@ -15,36 +33,49 @@ const getProfile = async () => {
   }
 };
 
-const loadResource = async (filename) => {
-  try {
-    const content = await fs.readFile(`./resources/${filename}.json`, "utf-8");
-    return JSON.parse(content);
-  } catch (error) {
-    console.error(error);
-    return null;
+const getRelicInfoList = async (equipList = []) => {
+  for (const equip of equipList) {
+    if (!(equip.itemId in resources.relics)) {
+      continue;
+    }
+
+    const relic = resources.relics?.[equip.itemId];
+    console.log(relic);
   }
 };
+
+const getWeaponInfoList = async (equipList = []) => {
+  for (const equip of equipList) {
+    if (!(equip.itemId in resources.weapons)) {
+      continue;
+    }
+
+    const weapon = resources.weapons?.[equip.itemId];
+    console.log(weapon);
+  }
+};
+
+// TODO 聖遺物と武器のリスト作成から
 
 const getAvatarsInfo = async (uid) => {
   try {
     const profile = await getProfile(uid);
     const avatarInfoList = profile.avatarInfoList;
 
-    const avatars = await loadResource("avatars");
-    const text_map = await loadResource("text_map");
-
     const result = [];
 
     for (const avatarInfo of avatarInfoList) {
-      const avatar = avatars?.[avatarInfo?.avatarId];
+      const avatarBasicInfo = resources.avatars?.[avatarInfo?.avatarId];
+      const relicInfoList = getRelicInfoList(avatarInfo?.equipList);
+      const weaponInfoList = getWeaponInfoList(avatarInfo?.equipList);
 
       result.push({
         id: avatarInfo?.avatarId,
-        name: text_map?.[avatar?.NameTextMapHash],
-        element: avatar?.Element,
+        name: resources.textMap?.[avatarBasicInfo?.NameTextMapHash],
+        element: avatarBasicInfo?.Element,
         level: avatarInfo?.propMap?.["4001"]?.val,
         consts: "talentIdList" in avatarInfo ? avatarInfo.talentIdList.length : 0,
-        constsIcon: avatar?.Consts.map(getIconUrl),
+        constsIcon: avatarBasicInfo?.Consts.map(getIconUrl),
         stats: {
           cr: avatarInfo?.fightPropMap?.["20"],
           cd: avatarInfo?.fightPropMap?.["22"],
@@ -67,23 +98,23 @@ const getAvatarsInfo = async (uid) => {
           },
         },
         talents: Object.fromEntries(
-          avatar?.SkillOrder.map((id) => {
+          avatarBasicInfo?.SkillOrder.map((id) => {
             return [
               id,
               {
-                icon: getIconUrl(avatar?.Skills?.[id]),
+                icon: getIconUrl(avatarBasicInfo?.Skills?.[id]),
                 level: avatarInfo?.skillLevelMap?.[id],
-                extra: avatarInfo?.proudSkillExtraLevelMap?.[avatar?.ProudMap?.[id]] ?? 0,
+                extra: avatarInfo?.proudSkillExtraLevelMap?.[avatarBasicInfo?.ProudMap?.[id]] ?? 0,
               },
             ];
           }),
         ),
-        quality: avatar?.QualityType,
+        quality: avatarBasicInfo?.QualityType,
         friendship: avatarInfo?.fetterInfo?.expLevel,
         icon:
           "costumeId" in avatarInfo
-            ? getIconUrl(avatar?.Costumes?.[avatarInfo?.costumeId]?.icon)
-            : getIconUrl(avatar?.SideIconName.replace(/_Side/g, "")),
+            ? getIconUrl(avatarBasicInfo?.Costumes?.[avatarInfo?.costumeId]?.icon)
+            : getIconUrl(avatarBasicInfo?.SideIconName.replace(/_Side/g, "")),
       });
     }
 
@@ -97,7 +128,7 @@ const getAvatarsInfo = async (uid) => {
 const main = async () => {
   const avatarsInfo = await getAvatarsInfo("889572498");
   for (const avatar of avatarsInfo) {
-    console.log(avatar);
+    // console.log(avatar);
   }
 };
 
