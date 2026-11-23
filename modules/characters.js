@@ -1,17 +1,7 @@
 import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 
-const loadResource = (filename) => {
-  try {
-    const content = fs.readFileSync(`./resources/${filename}.json`, "utf-8");
-    return JSON.parse(content);
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
-const RELIC_PROPS = {
+const ARTIFACT_PROPS = {
   FIGHT_PROP_HP: 0,
   FIGHT_PROP_ATTACK: 1,
   FIGHT_PROP_DEFENSE: 2,
@@ -33,11 +23,33 @@ const RELIC_PROPS = {
   FIGHT_PROP_GRASS_ADD_HURT: 18,
 };
 
+const loadResource = (filename) => {
+  try {
+    const content = fs.readFileSync(`./resources/${filename}.json`, "utf-8");
+    return JSON.parse(content);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 const resources = {
   avatars: loadResource("avatars"),
   textMap: loadResource("text_map"),
-  relics: loadResource("relics"),
+  artifacts: loadResource("artifacts"),
   weapons: loadResource("weapons"),
+};
+
+// TODO この関数はprofile moduleのものを使用する
+const getProfile = async () => {
+  try {
+    const content = await fsPromises.readFile("./data/profile.json", "utf-8");
+    const backup = JSON.parse(content);
+    return backup.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
 const getIconUrl = (iconName) => {
@@ -49,25 +61,14 @@ const getIconUrl = (iconName) => {
   return `https://enka.network/ui/${formatted}.png`;
 };
 
-const getProfile = async () => {
-  try {
-    const content = await fsPromises.readFile("./data/backup.json", "utf-8");
-    const backup = JSON.parse(content);
-    return backup.data;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
+const generateArtifactId = (artifact) => {
+  const artifactSet = resources.artifacts.Items?.[artifact.itemId];
+  const setId = artifactSet?.SetId;
+  const type = artifactSet?.EquipType;
 
-const generateRelicId = (relic) => {
-  const relicSet = resources.relics.Items?.[relic.itemId];
-  const setId = relicSet?.SetId;
-  const type = relicSet?.EquipType;
+  const mainstat = `${artifact.mainstat?.[0]}:${Math.round(artifact.mainstat?.[1] * 10)}`;
 
-  const mainstat = `${relic.mainstat?.[0]}:${Math.round(relic.mainstat?.[1] * 10)}`;
-
-  const substats = relic.substats
+  const substats = artifact.substats
     .map(([propId, value]) => ({
       id: propId,
       value: Math.round(value * 10),
@@ -79,28 +80,31 @@ const generateRelicId = (relic) => {
   return [setId, type, mainstat, substats].join("-");
 };
 
-const getRelicInfoList = (equipList = []) => {
-  const relics = [];
+const getArtifactInfoList = (equipList = []) => {
+  const artifacts = [];
 
   for (const equip of equipList) {
     if (equip?.flat?.itemType !== "ITEM_RELIQUARY") {
       continue;
     }
 
-    const relic = {
+    const artifact = {
       itemId: equip?.itemId,
       level: equip?.reliquary?.level - 1,
-      mainstat: [RELIC_PROPS?.[equip?.flat?.reliquaryMainstat?.mainPropId], equip?.flat?.reliquaryMainstat?.statValue],
+      mainstat: [
+        ARTIFACT_PROPS?.[equip?.flat?.reliquaryMainstat?.mainPropId],
+        equip?.flat?.reliquaryMainstat?.statValue,
+      ],
       substats: equip?.flat?.reliquarySubstats.map((substat) => {
-        return [RELIC_PROPS?.[substat?.appendPropId], substat?.statValue];
+        return [ARTIFACT_PROPS?.[substat?.appendPropId], substat?.statValue];
       }),
     };
 
-    const id = generateRelicId(relic);
-    relics.push({ id, ...relic });
+    const id = generateArtifactId(artifact);
+    artifacts.push({ id, ...artifact });
   }
 
-  return relics;
+  return artifacts;
 };
 
 const getWeaponInfo = (equipList = []) => {
@@ -130,7 +134,7 @@ const getShowcaseAvatars = async (uid) => {
 
     for (const avatarInfo of avatarInfoList) {
       const avatarBasicInfo = resources.avatars?.[avatarInfo.avatarId];
-      const relicInfoList = getRelicInfoList(avatarInfo?.equipList);
+      const artifactInfoList = getArtifactInfoList(avatarInfo?.equipList);
       const weaponInfo = getWeaponInfo(avatarInfo?.equipList);
 
       result.push({
@@ -172,10 +176,10 @@ const getShowcaseAvatars = async (uid) => {
           },
           friendship: avatarInfo?.fetterInfo?.expLevel,
           ...("costumeId" in avatarInfo ? { costume: avatarInfo.costumeId } : {}),
-          relics: relicInfoList.map((relic) => relic.id),
+          artifacts: artifactInfoList.map((artifact) => artifact.id),
           weaponInfo: weaponInfo,
         },
-        relicInfoList: relicInfoList,
+        artifactInfoList: artifactInfoList,
       });
     }
 
@@ -219,27 +223,29 @@ const enrichAvatarInfo = (rawAvatarInfo) => {
   return avatarInfo;
 };
 
-const enrichRelicInfo = (rawRelicInfo) => {
-  const relicInfo = structuredClone(rawRelicInfo);
-  const relicSet = resources.relics.Items?.[relicInfo.itemId];
+const enrichArtifactInfo = (rawArtifactInfo) => {
+  const artifactInfo = structuredClone(rawArtifactInfo);
+  const artifactSet = resources.artifacts.Items?.[artifactInfo.itemId];
 
-  Object.assign(relicInfo, {
-    setId: relicSet?.SetId,
-    setName: resources.textMap?.[resources.relics.Sets?.[relicSet?.SetId]?.Name],
-    rarity: relicSet?.Rarity,
-    type: relicSet?.EquipType,
-    icon: getIconUrl(relicSet?.Icon),
+  Object.assign(artifactInfo, {
+    setId: artifactSet?.SetId,
+    setName: resources.textMap?.[resources.artifacts.Sets?.[artifactSet?.SetId]?.Name],
+    rarity: artifactSet?.Rarity,
+    type: artifactSet?.EquipType,
+    icon: getIconUrl(artifactSet?.Icon),
   });
 
-  return relicInfo;
+  return artifactInfo;
 };
 
 const main = async () => {
   const showcaseAvatars = await getShowcaseAvatars("889572498");
-  fsPromises.writeFile("./data/avatars.json", JSON.stringify(showcaseAvatars), "utf-8");
+  // fsPromises.writeFile("./data/avatars.json", JSON.stringify(showcaseAvatars), "utf-8");
 
   const enrichedAvatarInfo = enrichAvatarInfo(showcaseAvatars[0].avatarInfo);
-  const enrichedRelicInfo = enrichRelicInfo(showcaseAvatars[0].relicInfoList[0]);
+  const enrichedArtifactInfo = enrichArtifactInfo(showcaseAvatars[0].artifactInfoList[0]);
+
+  console.log(enrichedAvatarInfo);
 };
 
 main();

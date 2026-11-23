@@ -79,9 +79,9 @@ const refreshTextMap = async () => {
 
 const refreshRelics = async () => {
   const url = "https://raw.githubusercontent.com/EnkaNetwork/API-docs/refs/heads/master/store/gi/relics.json";
-  const relics = await fetchCanonicalResource(url);
+  const artifacts = await fetchCanonicalResource(url);
 
-  updateLocalResource("relics", relics);
+  updateLocalResource("artifacts", artifacts);
 };
 
 const refreshWeapons = async () => {
