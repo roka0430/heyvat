@@ -171,6 +171,18 @@ app.get("/api/showcase", async (req, res) => {
   }
 });
 
+app.get("/api/characters", async (req, res) => {
+  try {
+    const { showcase: showcaseOnly = false } = req.query;
+    const uid = await settings.get("uid");
+    const data = await showcase.getCharacters(uid, showcaseOnly);
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get characters" });
+  }
+});
+
 app.get("/api/uid", async (req, res) => {
   try {
     const uid = await settings.get("uid");

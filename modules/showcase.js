@@ -319,10 +319,20 @@ const updateShowcaseData = async (uid) => {
   return showcaseCharacters;
 };
 
-const showcase = {
-  updateShowcaseData,
-  enrichArtifactInfo,
-  enrichCharacterInfo,
+const getCharacters = async (uid, showcaseOnly = false) => {
+  const showcaseData = await updateShowcaseData(uid);
+
+  if (showcaseOnly) {
+    return showcaseData.map((datum) => enrichCharacterInfo(datum.characterInfo));
+  }
+
+  const dirpath = path.join("./data/showcase", uid);
+  const charactersData = (await loadData(dirpath, "characters")) ?? {};
+
+  return Object.values(charactersData).map((datum) => enrichCharacterInfo(datum));
 };
 
-export default showcase;
+export default {
+  updateShowcaseData,
+  getCharacters,
+};
