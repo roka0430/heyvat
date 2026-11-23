@@ -1,5 +1,6 @@
-import fs from "node:fs";
+import fs, { write } from "node:fs";
 import fsPromises from "node:fs/promises";
+import path from "node:path";
 
 const ARTIFACT_PROPS = {
   FIGHT_PROP_HP: 0,
@@ -38,6 +39,33 @@ const resources = {
   textMap: loadResource("text_map"),
   artifacts: loadResource("artifacts"),
   weapons: loadResource("weapons"),
+};
+
+const loadData = async (filename) => {
+  try {
+    const content = await fsPromises.readFile(`./data/${filename}.json`, "utf-8");
+    return JSON.parse(content);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const writeData = async (filename, data) => {
+  const filepath = path.join("./data", `${filename}.json`);
+  const tempPath = `${filepath}.tmp`;
+
+  try {
+    const json = JSON.stringify(data);
+
+    await fsPromises.writeFile(tempPath, json, "utf-8");
+    await fsPromises.rename(tempPath, filepath);
+
+    return true;
+  } catch (error) {
+    await fsPromises.rm(tempPath, { force: true }).catch(() => {});
+    throw error;
+  }
 };
 
 // TODO この関数はprofile moduleのものを使用する
@@ -240,6 +268,19 @@ const enrichArtifactInfo = (rawArtifactInfo) => {
 
 const updateShowcaseData = async (uid) => {
   const showcaseAvatars = await getShowcaseAvatars(uid);
+
+  const charactersData = (await loadData("characters")) ?? {};
+  const artifactsData = (await loadData("artifacts")) ?? {};
+
+  for (const showcaseAvatar of showcaseAvatars) {
+    charactersData[showcaseAvatar.avatarInfo.id] = showcaseAvatar.avatarInfo;
+    for (const artifactInfo of showcaseAvatar.artifactInfoList) {
+      artifactsData[artifactInfo.id] = artifactInfo;
+    }
+  }
+
+  writeData("characters", charactersData);
+  writeData("artifacts", artifactsData);
 };
 
 updateShowcaseData("889572498");
