@@ -238,14 +238,8 @@ const enrichArtifactInfo = (rawArtifactInfo) => {
   return artifactInfo;
 };
 
-const main = async () => {
-  const showcaseAvatars = await getShowcaseAvatars("889572498");
-  // fsPromises.writeFile("./data/avatars.json", JSON.stringify(showcaseAvatars), "utf-8");
-
-  const enrichedAvatarInfo = enrichAvatarInfo(showcaseAvatars[0].avatarInfo);
-  const enrichedArtifactInfo = enrichArtifactInfo(showcaseAvatars[0].artifactInfoList[0]);
-
-  console.log(enrichedAvatarInfo);
+const updateShowcaseData = async (uid) => {
+  const showcaseAvatars = await getShowcaseAvatars(uid);
 };
 
-main();
+updateShowcaseData("889572498");
