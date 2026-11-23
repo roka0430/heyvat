@@ -43,19 +43,26 @@ const resources = {
   weapons: loadResource("weapons"),
 };
 
-const loadData = async (dirpath, filename) => {
+const loadData = async (uid, filename) => {
+  const dirpath = path.join("./data/showcase", uid);
+  const filepath = path.join(dirpath, `${filename}.json`);
+
+  await fsPromises.mkdir(dirpath, { recursive: true });
+
   try {
-    const filepath = path.join(dirpath, `${filename}.json`);
     const content = await fsPromises.readFile(filepath, "utf-8");
-    return JSON.parse(content);
+    return JSON.parse(content) ?? {};
   } catch (error) {
-    return null;
+    return {};
   }
 };
 
-const writeData = async (dirpath, filename, data) => {
+const writeData = async (uid, filename, data) => {
+  const dirpath = path.join("./data/showcase", uid);
   const filepath = path.join(dirpath, `${filename}.json`);
   const tempPath = `${filepath}.tmp`;
+
+  await fsPromises.mkdir(dirpath, { recursive: true });
 
   try {
     const json = JSON.stringify(data);
@@ -69,18 +76,6 @@ const writeData = async (dirpath, filename, data) => {
     throw error;
   }
 };
-
-// TODO この関数はprofile moduleのものを使用する
-// const getProfile = async () => {
-//   try {
-//     const content = await fsPromises.readFile("./data/profile.json", "utf-8");
-//     const backup = JSON.parse(content);
-//     return backup.data;
-//   } catch (error) {
-//     console.error(error);
-//     return null;
-//   }
-// };
 
 const getIconUrl = (iconName) => {
   if (!iconName) {
@@ -294,13 +289,10 @@ const enrichArtifactInfo = (rawArtifactInfo) => {
 };
 
 const updateShowcaseData = async (uid) => {
-  const dirpath = path.join("./data/showcase", uid);
-  await fsPromises.mkdir(dirpath, { recursive: true });
-
   const showcaseCharacters = await getShowcaseCharacters(uid);
 
-  const charactersData = (await loadData(dirpath, "characters")) ?? {};
-  const artifactsData = (await loadData(dirpath, "artifacts")) ?? {};
+  const charactersData = await loadData(uid, "characters");
+  const artifactsData = await loadData(uid, "artifacts");
 
   const updatedAt = new Date().toISOString();
 
@@ -313,8 +305,8 @@ const updateShowcaseData = async (uid) => {
     }
   }
 
-  writeData(dirpath, "characters", charactersData);
-  writeData(dirpath, "artifacts", artifactsData);
+  writeData(uid, "characters", charactersData);
+  writeData(uid, "artifacts", artifactsData);
 
   return showcaseCharacters;
 };
@@ -326,8 +318,7 @@ const getCharacters = async (uid, showcaseOnly = false) => {
     return showcaseData.map((datum) => enrichCharacterInfo(datum.characterInfo));
   }
 
-  const dirpath = path.join("./data/showcase", uid);
-  const characters = (await loadData(dirpath, "characters")) ?? {};
+  const characters = await loadData(uid, "characters");
 
   return Object.values(characters).map((datum) => enrichCharacterInfo(datum));
 };
@@ -335,8 +326,7 @@ const getCharacters = async (uid, showcaseOnly = false) => {
 const getArtifacts = async (uid) => {
   await updateShowcaseData(uid);
 
-  const dirpath = path.join("./data/showcase", uid);
-  const artifacts = (await loadData(dirpath, "artifacts")) ?? {};
+  const artifacts = await loadData(uid, "artifacts");
 
   return Object.values(artifacts).map((datum) => enrichArtifactInfo(datum));
 };
