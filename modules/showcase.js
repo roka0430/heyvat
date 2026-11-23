@@ -2,6 +2,8 @@ import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import path from "node:path";
 
+import profiles from "./profile.js";
+
 const ARTIFACT_PROPS = {
   FIGHT_PROP_HP: 0,
   FIGHT_PROP_ATTACK: 1,
@@ -69,16 +71,16 @@ const writeData = async (dirpath, filename, data) => {
 };
 
 // TODO この関数はprofile moduleのものを使用する
-const getProfile = async () => {
-  try {
-    const content = await fsPromises.readFile("./data/profile.json", "utf-8");
-    const backup = JSON.parse(content);
-    return backup.data;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
+// const getProfile = async () => {
+//   try {
+//     const content = await fsPromises.readFile("./data/profile.json", "utf-8");
+//     const backup = JSON.parse(content);
+//     return backup.data;
+//   } catch (error) {
+//     console.error(error);
+//     return null;
+//   }
+// };
 
 const getIconUrl = (iconName) => {
   if (!iconName) {
@@ -168,7 +170,7 @@ const getWeaponInfo = (equipList = []) => {
 
 const getShowcaseCharacters = async (uid) => {
   try {
-    const profile = await getProfile(uid);
+    const profile = await profiles.getProfile(uid);
     const characterInfoList = profile.avatarInfoList;
 
     const result = [];
@@ -313,6 +315,14 @@ const updateShowcaseData = async (uid) => {
 
   writeData(dirpath, "characters", charactersData);
   writeData(dirpath, "artifacts", artifactsData);
+
+  return showcaseCharacters;
 };
 
-updateShowcaseData("889572498");
+const showcase = {
+  updateShowcaseData,
+  enrichArtifactInfo,
+  enrichCharacterInfo,
+};
+
+export default showcase;

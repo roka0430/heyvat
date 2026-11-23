@@ -9,7 +9,7 @@ import resources from "./modules/resources.js";
 import version from "./modules/version.js";
 import profiles from "./modules/profile.js";
 import simulator from "./modules/simulator.js";
-import builds from "./modules/builds.js";
+import showcase from "./modules/showcase.js";
 
 const app = express();
 const port = 3000;
@@ -159,14 +159,15 @@ app.get("/api/user", async (req, res) => {
   }
 });
 
-app.get("/api/avatars", async (req, res) => {
+// TODO これはなんとかする
+app.get("/api/showcase", async (req, res) => {
   try {
     const uid = await settings.get("uid");
-    const data = await profiles.getAvatarsInfo(uid);
+    const data = await showcase.updateShowcaseData(uid);
     res.json(data);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to fetch avatars info" });
+    res.status(500).json({ error: "Failed to update showcase data" });
   }
 });
 
