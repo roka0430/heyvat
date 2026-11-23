@@ -1,4 +1,4 @@
-import fs, { write } from "node:fs";
+import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import path from "node:path";
 
@@ -128,8 +128,21 @@ const getArtifactInfoList = (equipList = []) => {
       }),
     };
 
+    const critScore =
+      (artifact.substats.find((substat) => substat[0] === 6)?.[1] ?? 0) * 2 +
+      (artifact.substats.find((substat) => substat[0] === 7)?.[1] ?? 0);
+
+    const scores = {
+      crit: Math.round(critScore * 10) / 10,
+      hp: Math.round((critScore + (artifact.substats.find((substat) => substat[0] === 3)?.[1] ?? 0)) * 10) / 10,
+      atk: Math.round((critScore + (artifact.substats.find((substat) => substat[0] === 4)?.[1] ?? 0)) * 10) / 10,
+      def: Math.round((critScore + (artifact.substats.find((substat) => substat[0] === 5)?.[1] ?? 0)) * 10) / 10,
+      er: Math.round((critScore + (artifact.substats.find((substat) => substat[0] === 8)?.[1] ?? 0)) * 10) / 10,
+      em: Math.round((critScore + (artifact.substats.find((substat) => substat[0] === 10)?.[1] ?? 0) / 4) * 10) / 10,
+    };
+
     const id = generateArtifactId(artifact);
-    artifacts.push({ id, ...artifact });
+    artifacts.push({ id, ...artifact, scores });
   }
 
   return artifacts;
@@ -205,6 +218,18 @@ const getShowcaseAvatars = async (uid) => {
           friendship: avatarInfo?.fetterInfo?.expLevel,
           ...("costumeId" in avatarInfo ? { costume: avatarInfo.costumeId } : {}),
           artifacts: artifactInfoList.map((artifact) => artifact.id),
+          scores: Object.fromEntries(
+            Object.entries(
+              artifactInfoList
+                .map((artifactInfo) => artifactInfo.scores)
+                .reduce((acc, score) => {
+                  for (const key in score) {
+                    acc[key] = (acc[key] ?? 0) + score[key];
+                  }
+                  return acc;
+                }, {}),
+            ).map(([key, value]) => [key, Math.round(value * 10) / 10]),
+          ),
           weaponInfo: weaponInfo,
         },
         artifactInfoList: artifactInfoList,
@@ -291,5 +316,3 @@ const updateShowcaseData = async (uid) => {
 };
 
 updateShowcaseData("889572498");
-
-// TODO 聖遺物スコアを追加
