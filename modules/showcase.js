@@ -336,3 +336,6 @@ export default {
   getCharacters,
   getArtifacts,
 };
+
+// TODO 推奨スコア対応表を作成して推奨スコアをデータに追加
+// TODO characterデータに聖遺物セットの情報も含める
