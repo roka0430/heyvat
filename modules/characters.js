@@ -11,14 +11,6 @@ const loadResource = (filename) => {
   }
 };
 
-const RELIC_TYPES = {
-  EQUIP_BRACER: 0,
-  EQUIP_NECKLACE: 1,
-  EQUIP_SHOES: 2,
-  EQUIP_RING: 3,
-  EQUIP_DRESS: 4,
-};
-
 const RELIC_PROPS = {
   FIGHT_PROP_HP: 0,
   FIGHT_PROP_ATTACK: 1,
@@ -44,7 +36,7 @@ const RELIC_PROPS = {
 const resources = {
   avatars: loadResource("avatars"),
   textMap: loadResource("text_map"),
-  relicSets: loadResource("relic_sets"),
+  relics: loadResource("relics"),
   weapons: loadResource("weapons"),
 };
 
@@ -68,10 +60,14 @@ const getProfile = async () => {
   }
 };
 
-const generateRelicId = (artifact) => {
-  const mainstat = `${artifact.mainstat?.[0]}:${Math.round(artifact.mainstat?.[1] * 10)}`;
+const generateRelicId = (relic) => {
+  const relicSet = resources.relics.Items?.[relic.itemId];
+  const setId = relicSet?.SetId;
+  const type = relicSet?.EquipType;
 
-  const substats = artifact.substats
+  const mainstat = `${relic.mainstat?.[0]}:${Math.round(relic.mainstat?.[1] * 10)}`;
+
+  const substats = relic.substats
     .map(([propId, value]) => ({
       id: propId,
       value: Math.round(value * 10),
@@ -80,7 +76,7 @@ const generateRelicId = (artifact) => {
     .map(({ id, value }) => `${id}:${value}`)
     .join("-");
 
-  return [artifact.setId, artifact.type, mainstat, substats].join("-");
+  return [setId, type, mainstat, substats].join("-");
 };
 
 const getRelicInfoList = (equipList = []) => {
@@ -93,12 +89,7 @@ const getRelicInfoList = (equipList = []) => {
 
     const relic = {
       itemId: equip?.itemId,
-      setId: equip?.flat?.setId,
-      setName: resources.textMap?.[resources.relicSets?.[equip?.flat?.setId]?.Name],
-      rarity: equip?.flat?.rankLevel,
-      type: RELIC_TYPES?.[equip?.flat?.equipType],
       level: equip?.reliquary?.level - 1,
-      icon: getIconUrl(equip?.flat?.icon),
       mainstat: [RELIC_PROPS?.[equip?.flat?.reliquaryMainstat?.mainPropId], equip?.flat?.reliquaryMainstat?.statValue],
       substats: equip?.flat?.reliquarySubstats.map((substat) => {
         return [RELIC_PROPS?.[substat?.appendPropId], substat?.statValue];
@@ -118,23 +109,19 @@ const getWeaponInfo = (equipList = []) => {
       continue;
     }
 
-    const weaponBasicInfo = resources.weapons?.[equip?.itemId];
     const stats = equip?.flat?.weaponStats.map((stat) => Object.values(stat));
 
     return {
-      rarity: equip?.flat?.rankLevel,
-      type: weaponBasicInfo?.WeaponType,
+      id: equip?.itemId,
       level: equip?.weapon?.level,
       refinement: Object.values(equip?.weapon?.affixMap)?.[0] + 1,
-      name: resources.textMap?.[equip?.flat?.nameTextMapHash],
-      icon: getIconUrl(equip?.flat?.icon),
       atk: stats.find((stat) => stat?.[0] === "FIGHT_PROP_BASE_ATTACK"),
       stat: stats.find((stat) => stat?.[0] !== "FIGHT_PROP_BASE_ATTACK"),
     };
   }
 };
 
-const getAvatarsInfo = async (uid) => {
+const getShowcaseAvatars = async (uid) => {
   try {
     const profile = await getProfile(uid);
     const avatarInfoList = profile.avatarInfoList;
@@ -142,58 +129,53 @@ const getAvatarsInfo = async (uid) => {
     const result = [];
 
     for (const avatarInfo of avatarInfoList) {
-      const avatarBasicInfo = resources.avatars?.[avatarInfo?.avatarId];
+      const avatarBasicInfo = resources.avatars?.[avatarInfo.avatarId];
       const relicInfoList = getRelicInfoList(avatarInfo?.equipList);
       const weaponInfo = getWeaponInfo(avatarInfo?.equipList);
 
       result.push({
-        id: avatarInfo?.avatarId,
-        name: resources.textMap?.[avatarBasicInfo?.NameTextMapHash],
-        element: avatarBasicInfo?.Element,
-        level: avatarInfo?.propMap?.["4001"]?.val,
-        consts: "talentIdList" in avatarInfo ? avatarInfo.talentIdList.length : 0,
-        constsIcon: avatarBasicInfo?.Consts.map(getIconUrl),
-        stats: {
-          cr: avatarInfo?.fightPropMap?.["20"],
-          cd: avatarInfo?.fightPropMap?.["22"],
-          er: avatarInfo?.fightPropMap?.["23"],
-          hb: avatarInfo?.fightPropMap?.["26"],
-          ihb: avatarInfo?.fightPropMap?.["27"],
-          em: avatarInfo?.fightPropMap?.["28"],
-          hp: avatarInfo?.fightPropMap?.["2000"],
-          atk: avatarInfo?.fightPropMap?.["2001"],
-          def: avatarInfo?.fightPropMap?.["2002"],
-          dmg: {
-            phys: avatarInfo?.fightPropMap?.["30"],
-            pyro: avatarInfo?.fightPropMap?.["40"],
-            electro: avatarInfo?.fightPropMap?.["41"],
-            hydro: avatarInfo?.fightPropMap?.["42"],
-            dendro: avatarInfo?.fightPropMap?.["43"],
-            anemo: avatarInfo?.fightPropMap?.["44"],
-            geo: avatarInfo?.fightPropMap?.["45"],
-            cryo: avatarInfo?.fightPropMap?.["46"],
+        avatarInfo: {
+          id: avatarInfo?.avatarId,
+          level: avatarInfo?.propMap?.["4001"]?.val,
+          consts: "talentIdList" in avatarInfo ? avatarInfo.talentIdList.length : 0,
+          talents: Object.fromEntries(
+            avatarBasicInfo?.SkillOrder.map((id) => {
+              return [
+                id,
+                {
+                  level: avatarInfo?.skillLevelMap?.[id],
+                  extra: avatarInfo?.proudSkillExtraLevelMap?.[avatarBasicInfo?.ProudMap?.[id]] ?? 0,
+                },
+              ];
+            }),
+          ),
+          stats: {
+            cr: avatarInfo?.fightPropMap?.["20"],
+            cd: avatarInfo?.fightPropMap?.["22"],
+            er: avatarInfo?.fightPropMap?.["23"],
+            hb: avatarInfo?.fightPropMap?.["26"],
+            ihb: avatarInfo?.fightPropMap?.["27"],
+            em: avatarInfo?.fightPropMap?.["28"],
+            hp: avatarInfo?.fightPropMap?.["2000"],
+            atk: avatarInfo?.fightPropMap?.["2001"],
+            def: avatarInfo?.fightPropMap?.["2002"],
+            dmg: {
+              phys: avatarInfo?.fightPropMap?.["30"],
+              pyro: avatarInfo?.fightPropMap?.["40"],
+              electro: avatarInfo?.fightPropMap?.["41"],
+              hydro: avatarInfo?.fightPropMap?.["42"],
+              dendro: avatarInfo?.fightPropMap?.["43"],
+              anemo: avatarInfo?.fightPropMap?.["44"],
+              geo: avatarInfo?.fightPropMap?.["45"],
+              cryo: avatarInfo?.fightPropMap?.["46"],
+            },
           },
+          friendship: avatarInfo?.fetterInfo?.expLevel,
+          ...("costumeId" in avatarInfo ? { costume: avatarInfo.costumeId } : {}),
+          relics: relicInfoList.map((relic) => relic.id),
+          weaponInfo: weaponInfo,
         },
-        talents: Object.fromEntries(
-          avatarBasicInfo?.SkillOrder.map((id) => {
-            return [
-              id,
-              {
-                icon: getIconUrl(avatarBasicInfo?.Skills?.[id]),
-                level: avatarInfo?.skillLevelMap?.[id],
-                extra: avatarInfo?.proudSkillExtraLevelMap?.[avatarBasicInfo?.ProudMap?.[id]] ?? 0,
-              },
-            ];
-          }),
-        ),
-        quality: avatarBasicInfo?.QualityType,
-        friendship: avatarInfo?.fetterInfo?.expLevel,
-        icon:
-          "costumeId" in avatarInfo
-            ? getIconUrl(avatarBasicInfo?.Costumes?.[avatarInfo?.costumeId]?.Icon)
-            : getIconUrl(avatarBasicInfo?.SideIconName.replace(/_Side/g, "")),
-        relics: relicInfoList,
-        weapon: weaponInfo,
+        relicInfoList: relicInfoList,
       });
     }
 
@@ -204,12 +186,60 @@ const getAvatarsInfo = async (uid) => {
   }
 };
 
+const enrichAvatarInfo = (rawAvatarInfo) => {
+  const avatarInfo = structuredClone(rawAvatarInfo);
+  const weaponInfo = avatarInfo.weaponInfo;
+
+  const avatarBasicInfo = resources.avatars?.[avatarInfo.id];
+  const weaponBasicInfo = resources.weapons?.[weaponInfo.id];
+
+  Object.assign(avatarInfo, {
+    name: resources.textMap?.[avatarBasicInfo?.NameTextMapHash],
+    element: avatarBasicInfo?.Element,
+    constsIcon: avatarBasicInfo?.Consts.map(getIconUrl),
+    quality: avatarBasicInfo?.QualityType,
+    talents: Object.fromEntries(
+      Object.entries(avatarInfo.talents).map(([id, value]) => {
+        return [id, { ...value, icon: getIconUrl(avatarBasicInfo?.Skills?.[id]) }];
+      }),
+    ),
+    icon:
+      "costume" in avatarInfo
+        ? getIconUrl(avatarBasicInfo?.Costumes?.[avatarInfo?.costume]?.Icon)
+        : getIconUrl(avatarBasicInfo?.SideIconName.replace(/_Side/g, "")),
+  });
+
+  Object.assign(avatarInfo.weaponInfo, {
+    rarity: weaponBasicInfo?.Rarity,
+    type: weaponBasicInfo?.WeaponType,
+    name: resources.textMap?.[weaponBasicInfo?.NameTextMapHash],
+    icon: getIconUrl(weaponBasicInfo?.Icon),
+  });
+
+  return avatarInfo;
+};
+
+const enrichRelicInfo = (rawRelicInfo) => {
+  const relicInfo = structuredClone(rawRelicInfo);
+  const relicSet = resources.relics.Items?.[relicInfo.itemId];
+
+  Object.assign(relicInfo, {
+    setId: relicSet?.SetId,
+    setName: resources.textMap?.[resources.relics.Sets?.[relicSet?.SetId]?.Name],
+    rarity: relicSet?.Rarity,
+    type: relicSet?.EquipType,
+    icon: getIconUrl(relicSet?.Icon),
+  });
+
+  return relicInfo;
+};
+
 const main = async () => {
-  const avatarsInfo = await getAvatarsInfo("889572498");
-  // for (const avatar of avatarsInfo) {
-  //   console.log(avatar);
-  // }
-  fsPromises.writeFile("./data/avatars.json", JSON.stringify(avatarsInfo), "utf-8");
+  const showcaseAvatars = await getShowcaseAvatars("889572498");
+  fsPromises.writeFile("./data/avatars.json", JSON.stringify(showcaseAvatars), "utf-8");
+
+  const enrichedAvatarInfo = enrichAvatarInfo(showcaseAvatars[0].avatarInfo);
+  const enrichedRelicInfo = enrichRelicInfo(showcaseAvatars[0].relicInfoList[0]);
 };
 
 main();
