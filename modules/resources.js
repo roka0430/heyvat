@@ -77,11 +77,11 @@ const refreshTextMap = async () => {
   updateLocalResource("text_map", formattedTextMap);
 };
 
-const refreshRelicSets = async () => {
+const refreshRelics = async () => {
   const url = "https://raw.githubusercontent.com/EnkaNetwork/API-docs/refs/heads/master/store/gi/relics.json";
-  const relicSets = await fetchCanonicalResource(url);
+  const relics = await fetchCanonicalResource(url);
 
-  updateLocalResource("relic_sets", relicSets.Sets);
+  updateLocalResource("relics", relics);
 };
 
 const refreshWeapons = async () => {
@@ -96,7 +96,7 @@ const refresh = async () => {
   await refreshCircleIcons();
   await refreshNameCards();
   await refreshTextMap();
-  await refreshRelicSets();
+  await refreshRelics();
   await refreshWeapons();
 };
 
