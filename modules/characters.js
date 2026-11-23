@@ -69,12 +69,12 @@ const getProfile = async () => {
 };
 
 const generateRelicId = (artifact) => {
-  const mainstat = `${RELIC_PROPS[artifact.mainstat.mainPropId]}:${Math.round(artifact.mainstat.statValue * 10)}`;
+  const mainstat = `${artifact.mainstat?.[0]}:${Math.round(artifact.mainstat?.[1] * 10)}`;
 
   const substats = artifact.substats
-    .map(({ appendPropId, statValue }) => ({
-      id: RELIC_PROPS[appendPropId],
-      value: Math.round(statValue * 10),
+    .map(([propId, value]) => ({
+      id: propId,
+      value: Math.round(value * 10),
     }))
     .sort((a, b) => a.id - b.id)
     .map(({ id, value }) => `${id}:${value}`)
@@ -99,8 +99,10 @@ const getRelicInfoList = (equipList = []) => {
       type: RELIC_TYPES?.[equip?.flat?.equipType],
       level: equip?.reliquary?.level - 1,
       icon: getIconUrl(equip?.flat?.icon),
-      mainstat: equip?.flat?.reliquaryMainstat,
-      substats: equip?.flat?.reliquarySubstats,
+      mainstat: [RELIC_PROPS?.[equip?.flat?.reliquaryMainstat?.mainPropId], equip?.flat?.reliquaryMainstat?.statValue],
+      substats: equip?.flat?.reliquarySubstats.map((substat) => {
+        return [RELIC_PROPS?.[substat?.appendPropId], substat?.statValue];
+      }),
     };
 
     const id = generateRelicId(relic);
