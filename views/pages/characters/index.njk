@@ -3,6 +3,7 @@
 {% set pageId = "characters" %}
 
 {% block styles %}
+  <link rel="stylesheet" href="/css/characters.css" />
 {% endblock %}
 
 {% block title %}
@@ -12,8 +13,39 @@
 {% block content %}
   <main class="app-main">
     <h2 class="app-main__page-title">キャラクター</h2>
+    <div class="characters">
+      <div class="characters__list" x-data="charactersList">
+        <div class="characters__item characters__item--head">
+          <div class="characters__name">名前</div>
+          <div class="characters__consts">命ノ星座</div>
+          <div class="characters__weapon">武器</div>
+          <div class="characters__sets">セット</div>
+          <div class="characters__crit">CV</div>
+        </div>
+        <template x-for="character in characters" :key="character.id">
+          <div class="characters__item">
+            <div class="characters__name" x-text="character.name.ja"></div>
+            <div class="characters__consts">
+              C<span x-text="character.consts"></span>
+            </div>
+            <div
+              class="characters__weapon"
+              x-text="character.weaponInfo.name.ja">
+            </div>
+            <div class="characters__sets">null</div>
+            <div class="characters__crit">
+              <span x-text="Math.round(character.stats.cr * 1000) / 10"></span>
+              : <span
+                x-text="Math.round(character.stats.cd * 1000) / 10"></span>
+              <span x-text="character.scores.crit"></span>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
   </main>
 {% endblock %}
 
 {% block scripts %}
+  <script src="/js/characters.js" defer></script>
 {% endblock %}
