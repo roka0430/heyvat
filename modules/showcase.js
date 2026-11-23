@@ -272,9 +272,13 @@ const updateShowcaseData = async (uid) => {
   const charactersData = (await loadData("characters")) ?? {};
   const artifactsData = (await loadData("artifacts")) ?? {};
 
+  const updatedAt = new Date().toISOString();
+
   for (const showcaseAvatar of showcaseAvatars) {
+    showcaseAvatar.avatarInfo.updatedAt = updatedAt;
     charactersData[showcaseAvatar.avatarInfo.id] = showcaseAvatar.avatarInfo;
     for (const artifactInfo of showcaseAvatar.artifactInfoList) {
+      artifactInfo.updatedAt = updatedAt;
       artifactsData[artifactInfo.id] = artifactInfo;
     }
   }
@@ -284,3 +288,5 @@ const updateShowcaseData = async (uid) => {
 };
 
 updateShowcaseData("889572498");
+
+// TODO 聖遺物スコアを追加
