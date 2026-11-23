@@ -41,18 +41,18 @@ const resources = {
   weapons: loadResource("weapons"),
 };
 
-const loadData = async (filename) => {
+const loadData = async (dirpath, filename) => {
   try {
-    const content = await fsPromises.readFile(`./data/${filename}.json`, "utf-8");
+    const filepath = path.join(dirpath, `${filename}.json`);
+    const content = await fsPromises.readFile(filepath, "utf-8");
     return JSON.parse(content);
   } catch (error) {
-    console.error(error);
     return null;
   }
 };
 
-const writeData = async (filename, data) => {
-  const filepath = path.join("./data", `${filename}.json`);
+const writeData = async (dirpath, filename, data) => {
+  const filepath = path.join(dirpath, `${filename}.json`);
   const tempPath = `${filepath}.tmp`;
 
   try {
@@ -267,10 +267,13 @@ const enrichArtifactInfo = (rawArtifactInfo) => {
 };
 
 const updateShowcaseData = async (uid) => {
+  const dirpath = path.join("./data/showcase", uid);
+  await fsPromises.mkdir(dirpath, { recursive: true });
+
   const showcaseAvatars = await getShowcaseAvatars(uid);
 
-  const charactersData = (await loadData("characters")) ?? {};
-  const artifactsData = (await loadData("artifacts")) ?? {};
+  const charactersData = (await loadData(dirpath, "characters")) ?? {};
+  const artifactsData = (await loadData(dirpath, "artifacts")) ?? {};
 
   const updatedAt = new Date().toISOString();
 
@@ -283,8 +286,8 @@ const updateShowcaseData = async (uid) => {
     }
   }
 
-  writeData("characters", charactersData);
-  writeData("artifacts", artifactsData);
+  writeData(dirpath, "characters", charactersData);
+  writeData(dirpath, "artifacts", artifactsData);
 };
 
 updateShowcaseData("889572498");
