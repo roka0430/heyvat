@@ -33,7 +33,7 @@ const getProfile = async () => {
   }
 };
 
-const getRelicInfoList = async (equipList = []) => {
+const getRelicInfoList = (equipList = []) => {
   const relics = [];
 
   for (const equip of equipList) {
@@ -57,14 +57,25 @@ const getRelicInfoList = async (equipList = []) => {
   return relics;
 };
 
-const getWeaponInfoList = async (equipList = []) => {
+const getWeaponInfo = (equipList = []) => {
   for (const equip of equipList) {
     if (!(equip.itemId in resources.weapons)) {
       continue;
     }
 
-    const weapon = resources.weapons?.[equip.itemId];
-    console.log(weapon);
+    const weaponBasicInfo = resources.weapons?.[equip?.itemId];
+    const stats = equip?.flat?.weaponStats.map((stat) => Object.values(stat));
+
+    return {
+      rarity: equip?.flat?.rankLevel,
+      type: weaponBasicInfo?.WeaponType,
+      level: equip?.weapon?.level,
+      refinement: Object.values(equip?.weapon?.affixMap)?.[0] + 1,
+      name: resources.textMap?.[equip?.flat?.nameTextMapHash],
+      icon: getIconUrl(equip?.flat?.icon),
+      baseAtk: stats.find((stat) => stat?.[0] === "FIGHT_PROP_BASE_ATTACK")?.[1],
+      stat: stats.find((stat) => stat?.[0] !== "FIGHT_PROP_BASE_ATTACK"),
+    };
   }
 };
 
@@ -78,7 +89,7 @@ const getAvatarsInfo = async (uid) => {
     for (const avatarInfo of avatarInfoList) {
       const avatarBasicInfo = resources.avatars?.[avatarInfo?.avatarId];
       const relicInfoList = getRelicInfoList(avatarInfo?.equipList);
-      const weaponInfoList = getWeaponInfoList(avatarInfo?.equipList);
+      const weaponInfo = getWeaponInfo(avatarInfo?.equipList);
 
       result.push({
         id: avatarInfo?.avatarId,
@@ -127,6 +138,7 @@ const getAvatarsInfo = async (uid) => {
             ? getIconUrl(avatarBasicInfo?.Costumes?.[avatarInfo?.costumeId]?.icon)
             : getIconUrl(avatarBasicInfo?.SideIconName.replace(/_Side/g, "")),
         relics: relicInfoList,
+        weapon: weaponInfo,
       });
     }
 
@@ -140,7 +152,7 @@ const getAvatarsInfo = async (uid) => {
 const main = async () => {
   const avatarsInfo = await getAvatarsInfo("889572498");
   for (const avatar of avatarsInfo) {
-    // console.log(avatar);
+    console.log(avatar);
   }
 };
 
