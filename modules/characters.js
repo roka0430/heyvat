@@ -14,6 +14,7 @@ const loadResource = (filename) => {
 const resources = {
   avatars: loadResource("avatars"),
   textMap: loadResource("text_map"),
+  relicSets: loadResource("relic_sets"),
   weapons: loadResource("weapons"),
 };
 
@@ -33,13 +34,24 @@ const getProfile = async () => {
 };
 
 const getRelicInfoList = async (equipList = []) => {
+  const relics = [];
+
   for (const equip of equipList) {
     if (equip?.flat?.itemType !== "ITEM_RELIQUARY") {
       continue;
     }
 
-    console.log(equip?.flat);
+    relics.push({
+      itemId: equip?.itemId,
+      setId: equip?.flat?.setId,
+      setName: resources.textMap?.[resources.relicSets?.[equip?.flat?.setId]?.Name],
+      level: equip?.reliquary?.level - 1,
+    });
   }
+
+  console.log(relics);
+
+  return relics;
 };
 
 const getWeaponInfoList = async (equipList = []) => {
