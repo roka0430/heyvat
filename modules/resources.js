@@ -28,11 +28,11 @@ const updateLocalResource = async (filename, resource) => {
   }
 };
 
-const refreshAvatars = async () => {
+const refreshCharacters = async () => {
   const url = "https://raw.githubusercontent.com/EnkaNetwork/API-docs/refs/heads/master/store/gi/avatars.json";
-  const avatars = await fetchCanonicalResource(url);
+  const characters = await fetchCanonicalResource(url);
 
-  updateLocalResource("avatars", avatars);
+  updateLocalResource("characters", characters);
 };
 
 const refreshCircleIcons = async () => {
@@ -92,7 +92,7 @@ const refreshWeapons = async () => {
 };
 
 const refresh = async () => {
-  await refreshAvatars();
+  await refreshCharacters();
   await refreshCircleIcons();
   await refreshNameCards();
   await refreshTextMap();
