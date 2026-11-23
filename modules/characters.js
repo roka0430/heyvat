@@ -45,11 +45,14 @@ const getRelicInfoList = async (equipList = []) => {
       itemId: equip?.itemId,
       setId: equip?.flat?.setId,
       setName: resources.textMap?.[resources.relicSets?.[equip?.flat?.setId]?.Name],
+      rarity: equip?.flat?.rankLevel,
+      type: equip?.flat?.equipType,
       level: equip?.reliquary?.level - 1,
+      icon: getIconUrl(equip?.flat?.icon),
+      mainstat: equip?.flat?.reliquaryMainstat,
+      substats: equip?.flat?.reliquarySubstats,
     });
   }
-
-  console.log(relics);
 
   return relics;
 };
@@ -123,6 +126,7 @@ const getAvatarsInfo = async (uid) => {
           "costumeId" in avatarInfo
             ? getIconUrl(avatarBasicInfo?.Costumes?.[avatarInfo?.costumeId]?.icon)
             : getIconUrl(avatarBasicInfo?.SideIconName.replace(/_Side/g, "")),
+        relics: relicInfoList,
       });
     }
 
