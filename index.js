@@ -183,6 +183,17 @@ app.get("/api/characters", async (req, res) => {
   }
 });
 
+app.get("/api/artifacts", async (req, res) => {
+  try {
+    const uid = await settings.get("uid");
+    const data = await showcase.getArtifacts(uid);
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get artifacts" });
+  }
+});
+
 app.get("/api/uid", async (req, res) => {
   try {
     const uid = await settings.get("uid");

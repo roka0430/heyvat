@@ -327,12 +327,22 @@ const getCharacters = async (uid, showcaseOnly = false) => {
   }
 
   const dirpath = path.join("./data/showcase", uid);
-  const charactersData = (await loadData(dirpath, "characters")) ?? {};
+  const characters = (await loadData(dirpath, "characters")) ?? {};
 
-  return Object.values(charactersData).map((datum) => enrichCharacterInfo(datum));
+  return Object.values(characters).map((datum) => enrichCharacterInfo(datum));
+};
+
+const getArtifacts = async (uid) => {
+  await updateShowcaseData(uid);
+
+  const dirpath = path.join("./data/showcase", uid);
+  const artifacts = (await loadData(dirpath, "artifacts")) ?? {};
+
+  return Object.values(artifacts).map((datum) => enrichArtifactInfo(datum));
 };
 
 export default {
   updateShowcaseData,
   getCharacters,
+  getArtifacts,
 };
