@@ -59,6 +59,10 @@
           <span>前回すり抜け</span>
           <input type="checkbox" x-model.boolean="inputs.guaranteed" />
         </label>
+        <label class="simulator__toggle">
+          <span>空月の祝福</span>
+          <input type="checkbox" x-model.boolean="inputs.welkin" />
+        </label>
         <button class="simulator__calc-button" @click="simulateWish()">
           計算
         </button>
@@ -85,7 +89,7 @@
                 <td x-text="`${output.fate}連`"></td>
                 <td
                   x-text="`${formatPercentage(output.probability)}%`"
-                  :class="{ 'achieved': Math.round(output.probability * 100) >= 100 }">
+                  :class="{ 'achieved': Math.round(output.probability * 1000) >= 1000 }">
                 </td>
               </tr>
             </template>

@@ -1,6 +1,7 @@
 document.addEventListener("alpine:init", () => {
   Alpine.data("simulator", () => ({
     LOCAL_STORAGE_KEY: "heyvat:simulator_inputs",
+    PRIMO_PER_MONTH: 9500,
 
     defaultInputs: {
       target: 0,
@@ -9,6 +10,7 @@ document.addEventListener("alpine:init", () => {
       starlight: 0,
       pity: 0,
       guaranteed: false,
+      welkin: false,
     },
 
     inputs: {
@@ -18,6 +20,7 @@ document.addEventListener("alpine:init", () => {
       starlight: 0,
       pity: 0,
       guaranteed: false,
+      welkin: false,
     },
 
     outputs: [],
@@ -36,6 +39,11 @@ document.addEventListener("alpine:init", () => {
 
     get totalPrimo() {
       return Math.floor(this.inputs.primo + (this.inputs.fate + this.inputs.pity + this.inputs.starlight / 5) * 160);
+    },
+
+    get primoPerDay() {
+      const primoPerMonth = this.PRIMO_PER_MONTH + (this.inputs.welkin ? 3000 : 0);
+      return (primoPerMonth * 12) / 365.2422;
     },
 
     toDateString(date) {
@@ -100,7 +108,7 @@ document.addEventListener("alpine:init", () => {
 
       for (const version of versions) {
         const days = this.getDateDiff(now, version.end);
-        const totalPrimo = Math.floor((primo + days * ((9500 * 12) / 365.2422)) * (16 / 15));
+        const totalPrimo = Math.floor((primo + days * this.primoPerDay) * (16 / 15));
 
         outputs.push({
           version: this.toVersionString(version.major, version.minor, version.half),
