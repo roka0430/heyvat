@@ -228,7 +228,6 @@ const getShowcaseCharacters = async (uid) => {
                 }, {}),
             ).map(([key, value]) => [key, Math.round(value * 10) / 10]),
           ),
-          scoreReference: resources.scores?.[characterInfo?.avatarId],
           weaponInfo: weaponInfo,
         },
         artifactInfoList: artifactInfoList,
@@ -263,6 +262,7 @@ const enrichCharacterInfo = (rawCharacterInfo) => {
       "costume" in characterInfo
         ? getIconUrl(characterBasicInfo?.Costumes?.[characterInfo?.costume]?.Icon)
         : getIconUrl(characterBasicInfo?.SideIconName.replace(/_Side/g, "")),
+    scoreReference: resources.scores?.[characterInfo?.id],
   });
 
   Object.assign(characterInfo.weaponInfo, {
