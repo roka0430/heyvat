@@ -241,6 +241,22 @@ const getShowcaseCharacters = async (uid) => {
   }
 };
 
+const getArtifactSets = (artifactIds) => {
+  const setIds = artifactIds.map((artifact) => {
+    return parseInt(artifact.split("-")[0]);
+  });
+
+  const setList = [...new Set(setIds)].map((setId) => {
+    return [setId, setIds.filter((id) => id === setId).length];
+  });
+
+  return setList
+    .filter(([id, num]) => num >= 2)
+    .map(([id, num]) => {
+      return resources.textMap?.[resources.artifacts?.Sets?.[id]?.Name];
+    });
+};
+
 const enrichCharacterInfo = (rawCharacterInfo) => {
   const characterInfo = structuredClone(rawCharacterInfo);
   const weaponInfo = characterInfo.weaponInfo;
@@ -263,6 +279,7 @@ const enrichCharacterInfo = (rawCharacterInfo) => {
         ? getIconUrl(characterBasicInfo?.Costumes?.[characterInfo?.costume]?.Icon)
         : getIconUrl(characterBasicInfo?.SideIconName.replace(/_Side/g, "")),
     scoreReference: resources.scores?.[characterInfo?.id],
+    artifactSets: getArtifactSets(characterInfo.artifacts),
   });
 
   Object.assign(characterInfo.weaponInfo, {
