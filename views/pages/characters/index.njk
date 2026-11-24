@@ -29,7 +29,12 @@
               C<span x-text="character.consts"></span>
             </div>
             <div class="characters__weapon">
-              <span x-text="character.weaponInfo.name.ja"></span>
+              <img
+                :src="character.weaponInfo.icon"
+                alt="character.weaponInfo.name.en"
+                width="25"
+                height="25"
+              />
               R<span x-text="character.weaponInfo.refinement"></span>
             </div>
             <div class="characters__sets">
