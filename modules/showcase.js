@@ -305,6 +305,7 @@ const updateShowcaseData = async (uid) => {
     }
   }
 
+  writeData(uid, "showcase", showcaseCharacters);
   writeData(uid, "characters", charactersData);
   writeData(uid, "artifacts", artifactsData);
 
@@ -319,7 +320,6 @@ const getCharacters = async (uid, showcaseOnly = false) => {
   }
 
   const characters = await loadData(uid, "characters");
-
   return Object.values(characters).map((datum) => enrichCharacterInfo(datum));
 };
 
@@ -327,7 +327,6 @@ const getArtifacts = async (uid) => {
   await updateShowcaseData(uid);
 
   const artifacts = await loadData(uid, "artifacts");
-
   return Object.values(artifacts).map((datum) => enrichArtifactInfo(datum));
 };
 
