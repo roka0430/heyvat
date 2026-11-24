@@ -30,8 +30,8 @@
             <div class="dashboard-user__nickname" x-text="userInfo.nickname">
             </div>
             <div class="dashboard-user__rank">
-              <span x-text="`AR${userInfo.level}`"></span>
-              <span x-text="`WL${userInfo.worldLevel}`"></span>
+              <span x-text="`AR${userInfo.level ?? ''}`"></span>
+              <span x-text="`WL${userInfo.worldLevel ?? ''}`"></span>
             </div>
             <div class="dashboard-user__signature" x-text="userInfo.signature">
             </div>
@@ -78,7 +78,7 @@
             </div>
             <div class="dashboard-user__record dashboard-user__stygian">
               <img
-                :src="`https://enka.network/ui/UI_LeyLineChallenge_Medal_${userInfo.stygianIndex}.png`"
+                :src="`https://enka.network/ui/UI_LeyLineChallenge_Medal_${userInfo.stygianIndex ?? 0}.png`"
                 class="dashboard-user__record-icon"
                 width="20"
                 height="20"

@@ -58,10 +58,15 @@
 }
 
 .dashboard-user__icon img {
+  display: inline-block;
+
   width: 100%;
   height: 100%;
+
   border-radius: 50%;
   background-color: var(--color-avatar-background);
+
+  text-align: center;
 }
 
 .dashboard-user__nickname {
