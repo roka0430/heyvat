@@ -250,10 +250,19 @@ const getArtifactSets = (artifactIds) => {
     return [setId, setIds.filter((id) => id === setId).length];
   });
 
+  const artifactItems = Object.values(resources.artifacts?.Items);
+  const icons = Object.fromEntries(
+    setList.map(([id, num]) => {
+      const artifact = artifactItems.filter((artifact) => artifact?.SetId === id && artifact?.EquipType === 0)?.[0];
+      return [id, getIconUrl(artifact.Icon)];
+    }),
+  );
+
   return setList
     .filter(([id, num]) => num >= 2)
     .map(([id, num]) => {
-      return resources.textMap?.[resources.artifacts?.Sets?.[id]?.Name];
+      const name = resources.textMap?.[resources.artifacts?.Sets?.[id]?.Name];
+      return { name, icon: icons[id] };
     });
 };
 

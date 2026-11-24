@@ -33,8 +33,17 @@
               R<span x-text="character.weaponInfo.refinement"></span>
             </div>
             <div class="characters__sets">
-              <template x-for="set in character.artifactSets" :key="set.en">
-                <span x-text="set.ja"></span>
+              <template
+                x-for="set in character.artifactSets"
+                :key="set.name.en">
+                <div>
+                  <img
+                    :src="set.icon"
+                    alt="set.name.en"
+                    width="25"
+                    height="25"
+                  />
+                </div>
               </template>
             </div>
             <div class="characters__crit">

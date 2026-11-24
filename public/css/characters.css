@@ -7,6 +7,7 @@
 
 .characters__item {
   display: grid;
+  align-items: center;
   grid-template-columns: 3fr 1fr 1fr 1fr 2fr;
 
   padding: 8px;
@@ -15,4 +16,8 @@
 
 .characters__item--head {
   background: var(--color-surface);
+}
+
+.characters__sets {
+  display: flex;
 }
