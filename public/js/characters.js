@@ -3,30 +3,24 @@ document.addEventListener("alpine:init", () => {
     characters: [],
 
     async init() {
-      this.characters = await this.loadCharacters();
+      await this.loadCharacters();
     },
-
-    // async loadCharacters() {
-    //   try {
-    //     const res = await fetch("/api/characters");
-    //     return res.json();
-    //   } catch (error) {
-    //     console.error(error);
-    //     return [];
-    //   }
-    // },
 
     async loadCharacters() {
       const source = new EventSource("/api/characters/events");
 
-      source.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        console.log("受信:", data);
-      };
+      source.addEventListener("cache", (event) => {
+        this.characters = JSON.parse(event.data);
+      });
 
-      source.onerror = (err) => {
-        console.error("SSEエラー:", err);
-      };
+      source.addEventListener("update", (event) => {
+        this.characters = JSON.parse(event.data);
+        source.close();
+      });
+
+      source.addEventListener("error", () => {
+        source.close();
+      });
     },
   }));
 });

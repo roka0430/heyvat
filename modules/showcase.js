@@ -323,6 +323,16 @@ const getCharacters = async (uid, showcaseOnly = false) => {
   return Object.values(characters).map((datum) => enrichCharacterInfo(datum));
 };
 
+const getCacheCharacters = async (uid, showcaseOnly = false) => {
+  if (showcaseOnly) {
+    const characters = await loadData(uid, "showcase");
+    return characters.map((datum) => enrichCharacterInfo(datum.characterInfo));
+  }
+
+  const characters = await loadData(uid, "characters");
+  return Object.values(characters).map((datum) => enrichCharacterInfo(datum));
+};
+
 const getArtifacts = async (uid) => {
   await updateShowcaseData(uid);
 
@@ -333,6 +343,7 @@ const getArtifacts = async (uid) => {
 export default {
   updateShowcaseData,
   getCharacters,
+  getCacheCharacters,
   getArtifacts,
 };
 

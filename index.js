@@ -177,18 +177,24 @@ app.get("/api/characters/events", async (req, res) => {
   res.setHeader("Connection", "keep-alive");
   res.flushHeaders?.();
 
-  const payload = JSON.stringify({ time: new Date().toISOString() });
-  res.write(`data: ${payload}\n\n`);
+  const { showcase: showcaseOnly = false } = req.query;
 
-  const timer = setTimeout(() => {
-    const payload = JSON.stringify({ time: new Date().toISOString() });
-    res.write(`data: ${payload}\n\n`);
-  }, 3000);
+  try {
+    const uid = await settings.get("uid");
 
-  req.on("close", () => {
-    clearTimeout(timer);
+    const cacheCharacters = await showcase.getCacheCharacters(uid, showcaseOnly);
+    res.write(`event: cache\n`);
+    res.write(`data: ${JSON.stringify(cacheCharacters)}\n\n`);
+
+    const characters = await showcase.getCharacters(uid, showcaseOnly);
+    res.write(`event: update\n`);
+    res.write(`data: ${JSON.stringify(characters)}\n\n`);
+  } catch (error) {
+    res.write(`event: error\n`);
+    res.write(`data: ${JSON.stringify({ message: "更新に失敗しました" })}\n\n`);
+  } finally {
     res.end();
-  });
+  }
 });
 
 app.get("/api/characters", async (req, res) => {
