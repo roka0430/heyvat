@@ -116,36 +116,7 @@ const getUserInfo = async (uid) => {
   }
 };
 
-const getAvatarsInfo = async (uid) => {
-  try {
-    const profile = await getProfile(uid);
-    const avatarInfoList = profile.avatarInfoList;
-
-    const avatars = await loadResource("avatars");
-    const text_map = await loadResource("text_map");
-
-    const result = [];
-
-    for (const avatarInfo of avatarInfoList) {
-      const avatarId = avatarInfo?.avatarId;
-      const avatarTextMapHash = avatars?.[avatarId]?.NameTextMapHash;
-      const avatarNameJa = text_map?.[avatarTextMapHash];
-
-      result.push({
-        avatarId,
-        avatarNameJa,
-      });
-    }
-
-    return result;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
 export default {
   getProfile,
   getUserInfo,
-  getAvatarsInfo,
 };
