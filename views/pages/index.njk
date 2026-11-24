@@ -17,7 +17,7 @@
       <section class="dashboard__user dashboard-user" x-data="user">
         <div
           class="dashboard-user__card"
-          :style="`--name-card-url: url('${userInfo.nameCardUrl}');`">
+          :style="`--name-card-url: url('${userInfo.nameCardUrl ?? ''}');`">
           <div class="dashboard-user__basic-info">
             <div class="dashboard-user__icon">
               <img
