@@ -28,16 +28,20 @@
             <div class="characters__consts">
               C<span x-text="character.consts"></span>
             </div>
-            <div
-              class="characters__weapon"
-              x-text="character.weaponInfo.name.ja">
+            <div class="characters__weapon">
+              <span x-text="character.weaponInfo.name.ja"></span>
+              R<span x-text="character.weaponInfo.refinement"></span>
             </div>
-            <div class="characters__sets">null</div>
+            <div class="characters__sets">
+              <template x-for="set in character.artifactSets" :key="set.en">
+                <span x-text="set.ja"></span>
+              </template>
+            </div>
             <div class="characters__crit">
               <span x-text="Math.round(character.stats.cr * 1000) / 10"></span>
               : <span
                 x-text="Math.round(character.stats.cd * 1000) / 10"></span>
-              <span x-text="character.scores.crit"></span>
+              <span x-text="character.scores[character.scoreReference]"></span>
             </div>
           </div>
         </template>
