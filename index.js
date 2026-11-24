@@ -159,15 +159,39 @@ app.get("/api/user", async (req, res) => {
   }
 });
 
-// TODO これはなんとかする
-app.get("/api/showcase", async (req, res) => {
+app.get("/api/user/events", async (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders?.();
+
   try {
     const uid = await settings.get("uid");
-    const data = await showcase.updateShowcaseData(uid);
+
+    const cacheUserInfo = await profiles.getCacheUserInfo(uid);
+    res.write(`event: cache\n`);
+    res.write(`data: ${JSON.stringify(cacheUserInfo)}\n\n`);
+
+    const userInfo = await profiles.getUserInfo(uid);
+    res.write(`event: update\n`);
+    res.write(`data: ${JSON.stringify(userInfo)}\n\n`);
+  } catch (error) {
+    res.write(`event: error\n`);
+    res.write(`data: ${JSON.stringify({ error: "Failed to update user info" })}\n\n`);
+  } finally {
+    res.end();
+  }
+});
+
+app.get("/api/characters", async (req, res) => {
+  try {
+    const { showcase: showcaseOnly = false } = req.query;
+    const uid = await settings.get("uid");
+    const data = await showcase.getCharacters(uid, showcaseOnly);
     res.json(data);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to update showcase data" });
+    res.status(500).json({ error: "Failed to get characters" });
   }
 });
 
@@ -191,21 +215,9 @@ app.get("/api/characters/events", async (req, res) => {
     res.write(`data: ${JSON.stringify(characters)}\n\n`);
   } catch (error) {
     res.write(`event: error\n`);
-    res.write(`data: ${JSON.stringify({ message: "更新に失敗しました" })}\n\n`);
+    res.write(`data: ${JSON.stringify({ error: "failed to update characters" })}\n\n`);
   } finally {
     res.end();
-  }
-});
-
-app.get("/api/characters", async (req, res) => {
-  try {
-    const { showcase: showcaseOnly = false } = req.query;
-    const uid = await settings.get("uid");
-    const data = await showcase.getCharacters(uid, showcaseOnly);
-    res.json(data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to get characters" });
   }
 });
 

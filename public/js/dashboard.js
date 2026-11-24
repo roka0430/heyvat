@@ -5,28 +5,24 @@ document.addEventListener("alpine:init", () => {
     userInfo: {},
 
     async init() {
-      this.userInfo = this.loadUserInfoCache();
-      this.userInfo = await this.loadUserInfo();
-      this.saveUserInfoCache();
-    },
-
-    loadUserInfoCache() {
-      const userInfoCache = localStorage.getItem(this.USER_INFO_KEY) ?? null;
-      return userInfoCache ? JSON.parse(userInfoCache) : {};
-    },
-
-    saveUserInfoCache() {
-      localStorage.setItem(this.USER_INFO_KEY, JSON.stringify(this.userInfo));
+      await this.loadUserInfo();
     },
 
     async loadUserInfo() {
-      try {
-        const res = await fetch("/api/user");
-        return res.json();
-      } catch (error) {
-        console.error(error);
-        return {};
-      }
+      const source = new EventSource("/api/user/events");
+
+      source.addEventListener("cache", (event) => {
+        this.userInfo = JSON.parse(event.data);
+      });
+
+      source.addEventListener("update", (event) => {
+        this.userInfo = JSON.parse(event.data);
+        source.close();
+      });
+
+      source.addEventListener("error", () => {
+        source.close();
+      });
     },
   }));
 

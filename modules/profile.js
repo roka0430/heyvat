@@ -9,6 +9,40 @@ const getIconUrl = (iconName) => {
   return `https://enka.network/ui/${iconName}.png`;
 };
 
+const loadData = async (uid, filename) => {
+  const dirpath = path.join("./data/showcase", uid);
+  const filepath = path.join(dirpath, `${filename}.json`);
+
+  await fs.mkdir(dirpath, { recursive: true });
+
+  try {
+    const content = await fs.readFile(filepath, "utf-8");
+    return JSON.parse(content) ?? {};
+  } catch (error) {
+    return {};
+  }
+};
+
+const writeData = async (uid, filename, data) => {
+  const dirpath = path.join("./data/showcase", uid);
+  const filepath = path.join(dirpath, `${filename}.json`);
+  const tempPath = `${filepath}.tmp`;
+
+  await fs.mkdir(dirpath, { recursive: true });
+
+  try {
+    const json = JSON.stringify(data);
+
+    await fs.writeFile(tempPath, json, "utf-8");
+    await fs.rename(tempPath, filepath);
+
+    return true;
+  } catch (error) {
+    await fs.rm(tempPath, { force: true }).catch(() => {});
+    throw error;
+  }
+};
+
 const loadResource = async (filename) => {
   try {
     const content = await fs.readFile(`./resources/${filename}.json`, "utf-8");
@@ -105,14 +139,22 @@ const getUserInfo = async (uid) => {
     delete playerInfo.showNameCardIdList;
     delete playerInfo.showAvatarInfoList;
 
-    return { ...playerInfo, nameCardUrl, iconUrl };
+    const userInfo = { ...playerInfo, nameCardUrl, iconUrl };
+    await writeData(uid, "user", userInfo);
+
+    return userInfo;
   } catch (error) {
     console.error(error);
     return null;
   }
 };
 
+const getCacheUserInfo = async (uid) => {
+  return await loadData(uid, "user");
+};
+
 export default {
   getProfile,
   getUserInfo,
+  getCacheUserInfo,
 };
