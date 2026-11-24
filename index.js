@@ -171,6 +171,26 @@ app.get("/api/showcase", async (req, res) => {
   }
 });
 
+app.get("/api/characters/events", async (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders?.();
+
+  const payload = JSON.stringify({ time: new Date().toISOString() });
+  res.write(`data: ${payload}\n\n`);
+
+  const timer = setTimeout(() => {
+    const payload = JSON.stringify({ time: new Date().toISOString() });
+    res.write(`data: ${payload}\n\n`);
+  }, 3000);
+
+  req.on("close", () => {
+    clearTimeout(timer);
+    res.end();
+  });
+});
+
 app.get("/api/characters", async (req, res) => {
   try {
     const { showcase: showcaseOnly = false } = req.query;
