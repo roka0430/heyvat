@@ -55,7 +55,8 @@
               <span x-text="Math.round(character.stats.cr * 1000) / 10"></span>
               : <span
                 x-text="Math.round(character.stats.cd * 1000) / 10"></span>
-              <span x-text="character.scores[character.scoreReference]"></span>
+              <span
+                x-text="Number(character.scores[character.scoreReference]).toFixed(1)"></span>
             </div>
           </div>
         </template>
