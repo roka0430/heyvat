@@ -371,5 +371,3 @@ export default {
   getArtifacts,
   getCacheArtifacts,
 };
-
-// TODO characterデータに聖遺物セットの情報も含める
