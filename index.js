@@ -160,7 +160,7 @@ app.get("/api/user", async (req, res) => {
 });
 
 app.get("/api/user/events", async (req, res) => {
-  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
   res.flushHeaders?.();
@@ -196,7 +196,7 @@ app.get("/api/characters", async (req, res) => {
 });
 
 app.get("/api/characters/events", async (req, res) => {
-  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
   res.flushHeaders?.();
@@ -229,6 +229,30 @@ app.get("/api/artifacts", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to get artifacts" });
+  }
+});
+
+app.get("/api/artifacts/events", async (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders?.();
+
+  try {
+    const uid = await settings.get("uid");
+
+    const cacheArtifacts = await showcase.getCacheArtifacts(uid);
+    res.write(`event: cache\n`);
+    res.write(`data: ${JSON.stringify(cacheArtifacts)}\n\n`);
+
+    const artifacts = await showcase.getArtifacts(uid);
+    res.write(`event: update\n`);
+    res.write(`data: ${JSON.stringify(artifacts)}\n\n`);
+  } catch (error) {
+    res.write(`event: error\n`);
+    res.write(`data: ${JSON.stringify({ error: "failed to update artifacts" })}\n\n`);
+  } finally {
+    res.end();
   }
 });
 

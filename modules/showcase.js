@@ -340,11 +340,17 @@ const getArtifacts = async (uid) => {
   return Object.values(artifacts).map((datum) => enrichArtifactInfo(datum));
 };
 
+const getCacheArtifacts = async (uid) => {
+  const artifacts = await loadData(uid, "artifacts");
+  return Object.values(artifacts).map((datum) => enrichArtifactInfo(datum));
+};
+
 export default {
   updateShowcaseData,
   getCharacters,
   getCacheCharacters,
   getArtifacts,
+  getCacheArtifacts,
 };
 
 // TODO 推奨スコア対応表を作成して推奨スコアをデータに追加
