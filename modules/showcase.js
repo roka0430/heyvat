@@ -41,6 +41,7 @@ const resources = {
   textMap: loadResource("text_map"),
   artifacts: loadResource("artifacts"),
   weapons: loadResource("weapons"),
+  scores: loadResource("scores"),
 };
 
 const loadData = async (uid, filename) => {
@@ -227,6 +228,7 @@ const getShowcaseCharacters = async (uid) => {
                 }, {}),
             ).map(([key, value]) => [key, Math.round(value * 10) / 10]),
           ),
+          scoreReference: resources.scores?.[characterInfo?.avatarId],
           weaponInfo: weaponInfo,
         },
         artifactInfoList: artifactInfoList,
@@ -353,5 +355,4 @@ export default {
   getCacheArtifacts,
 };
 
-// TODO 推奨スコア対応表を作成して推奨スコアをデータに追加
 // TODO characterデータに聖遺物セットの情報も含める
