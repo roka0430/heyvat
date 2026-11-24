@@ -23,12 +23,7 @@ const readStoredProfile = async () => {
   try {
     const content = await fs.readFile(STORED_FILE, "utf-8");
     const stored = JSON.parse(content);
-
-    if (Date.now() < stored.expiresAt) {
-      return stored.data;
-    }
-
-    return null;
+    return { data: stored.data, expiresAt: stored.expiresAt };
   } catch {
     return null;
   }
@@ -51,9 +46,9 @@ const writeStoredProfile = async (uid, data, ttl) => {
 };
 
 const fetchWithCache = async (uid, url) => {
-  const stored = await readStoredProfile();
+  const { data: stored, expiresAt } = await readStoredProfile();
 
-  if (stored) {
+  if (Date.now() < expiresAt) {
     return stored;
   }
 
@@ -80,6 +75,7 @@ const fetchWithCache = async (uid, url) => {
       return data;
     } finally {
       pending.delete(uid);
+      return stored;
     }
   })();
 
