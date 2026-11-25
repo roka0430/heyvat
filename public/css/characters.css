@@ -86,3 +86,9 @@
 .characters__crit span:nth-of-type(1) {
   text-align: right;
 }
+
+.characters__score {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

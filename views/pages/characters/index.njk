@@ -73,6 +73,12 @@
               <span x-text="Math.round(character.stats.cd * 1000) / 10"></span>
             </div>
             <div class="characters__score">
+              <img
+                :src="`/images/stats/${character.scoreReference}.png`"
+                alt="stats"
+                width="22"
+                height="22"
+              />
               <span
                 x-text="Number(character.scores[character.scoreReference]).toFixed(1)"></span>
             </div>
