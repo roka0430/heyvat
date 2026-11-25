@@ -262,7 +262,11 @@ const getArtifactSets = (artifactIds) => {
     .filter(([id, num]) => num >= 2)
     .map(([id, num]) => {
       const name = resources.textMap?.[resources.artifacts?.Sets?.[id]?.Name];
-      return { name, icon: icons[id] };
+      return {
+        name,
+        icon: icons[id],
+        num: num < 4 ? 2 : 4,
+      };
     });
 };
 

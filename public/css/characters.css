@@ -57,4 +57,16 @@
 
 .characters__sets {
   display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.characters__sets div {
+  display: flex;
+  align-items: end;
+}
+
+.characters__sets div span {
+  transform: translateX(-2px);
+  font-size: 0.8rem;
 }
