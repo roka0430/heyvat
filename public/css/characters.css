@@ -92,3 +92,17 @@
   align-items: center;
   gap: 4px;
 }
+
+.characters__score img {
+  filter: brightness(0) saturate(100%) invert(98%) sepia(11%) saturate(591%) hue-rotate(176deg) brightness(96%)
+    contrast(92%);
+  filter: brightness(0) saturate(100%) invert(52%) sepia(30%) saturate(228%) hue-rotate(170deg) brightness(93%)
+    contrast(89%);
+}
+
+.characters__score img {
+  filter: brightness(0) saturate(100%) invert(14%) sepia(44%) saturate(447%) hue-rotate(168deg) brightness(100%)
+    contrast(89%);
+  filter: brightness(0) saturate(100%) invert(65%) sepia(28%) saturate(208%) hue-rotate(170deg) brightness(87%)
+    contrast(90%);
+}
