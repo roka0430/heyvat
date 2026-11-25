@@ -25,8 +25,12 @@
         <template x-for="character in characters" :key="character.id">
           <div class="characters__item">
             <div class="characters__name" x-text="character.name.ja"></div>
-            <div class="characters__consts">
-              C<span x-text="character.consts"></span>
+            <div
+              class="characters__consts"
+              :class="`characters__consts--consts${character.consts}`">
+              <div :style="`--consts: ${character.consts};`">
+                C<span x-text="character.consts"></span>
+              </div>
             </div>
             <div class="characters__weapon">
               <img
@@ -35,7 +39,9 @@
                 width="25"
                 height="25"
               />
-              R<span x-text="character.weaponInfo.refinement"></span>
+              <div>
+                R<span x-text="character.weaponInfo.refinement"></span>
+              </div>
             </div>
             <div class="characters__sets">
               <template

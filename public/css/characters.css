@@ -10,12 +10,49 @@
   align-items: center;
   grid-template-columns: 2fr 1fr 1fr 1fr 2fr;
 
-  padding: 8px;
+  padding-inline: 8px;
   border: solid 0.5px var(--color-border);
 }
 
 .characters__item--head {
+  padding: 8px;
   background: var(--color-surface);
+}
+
+.characters__consts {
+  padding-block: 5px;
+}
+
+.characters__consts div {
+  display: inline-block;
+  width: calc(29px + var(--consts) * 3px);
+
+  padding-block: 3px;
+  padding-left: 5px;
+
+  background: #40839b;
+  border-radius: 5px;
+
+  color: var(--color-text-white);
+  font-size: 0.8rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.characters__consts--consts0 div {
+  background: #808080;
+}
+
+.characters__consts--consts6 div {
+  background: #a8781f;
+}
+
+.characters__weapon {
+  display: inline-flex;
+  align-items: end;
+}
+
+.characters__weapon div {
+  font-size: 0.8rem;
 }
 
 .characters__sets {
