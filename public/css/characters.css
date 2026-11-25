@@ -3,24 +3,24 @@
   flex-direction: column;
 
   border: solid 0.5px var(--color-border);
+  font-size: 0.9rem;
 }
 
 .characters__item {
   display: grid;
   align-items: center;
-  grid-template-columns: 2fr 1fr 1fr 1fr 2fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
 
+  padding-block: 5px;
   padding-inline: 8px;
+
   border: solid 0.5px var(--color-border);
 }
 
 .characters__item--head {
   padding: 8px;
   background: var(--color-surface);
-}
-
-.characters__consts {
-  padding-block: 5px;
+  white-space: nowrap;
 }
 
 .characters__consts div {
@@ -69,4 +69,14 @@
 .characters__sets div span {
   transform: translateX(-2px);
   font-size: 0.8rem;
+}
+
+.characters__crit {
+  display: grid;
+  grid-template-columns: 40px min-content 40px;
+  gap: 3px;
+}
+
+.characters__crit span:nth-of-type(1) {
+  text-align: right;
 }

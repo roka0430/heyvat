@@ -20,7 +20,8 @@
           <div class="characters__consts">命ノ星座</div>
           <div class="characters__weapon">武器</div>
           <div class="characters__sets">セット</div>
-          <div class="characters__crit">CV</div>
+          <div class="characters__crit">会心</div>
+          <div class="characters__crit">スコア</div>
         </div>
         <template x-for="character in characters" :key="character.id">
           <div class="characters__item">
@@ -60,8 +61,10 @@
             </div>
             <div class="characters__crit">
               <span x-text="Math.round(character.stats.cr * 1000) / 10"></span>
-              : <span
-                x-text="Math.round(character.stats.cd * 1000) / 10"></span>
+              <span>:</span>
+              <span x-text="Math.round(character.stats.cd * 1000) / 10"></span>
+            </div>
+            <div class="characters__score">
               <span
                 x-text="Number(character.scores[character.scoreReference]).toFixed(1)"></span>
             </div>
