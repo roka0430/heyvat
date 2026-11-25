@@ -21,7 +21,17 @@
           <div class="characters__weapon">武器</div>
           <div class="characters__sets">聖遺物</div>
           <div class="characters__crit">会心</div>
-          <div class="characters__crit">スコア</div>
+          <div class="characters__score">
+            <select x-model="referenceScore">
+              <option value="recommendation">推奨スコア</option>
+              <option value="crit">会心スコア</option>
+              <option value="hp">HP換算</option>
+              <option value="atk">攻撃換算</option>
+              <option value="def">防御換算</option>
+              <option value="er">元チャ換算</option>
+              <option value="em">熟知換算</option>
+            </select>
+          </div>
         </div>
         <template x-for="character in characters" :key="character.id">
           <div class="characters__item">
@@ -74,13 +84,13 @@
             </div>
             <div class="characters__score">
               <img
-                :src="`/images/stats/${character.scoreReference}.png`"
+                :src="`/images/stats/${referenceScore === 'recommendation' ? character.scoreReference : referenceScore}.png`"
                 alt="stats"
                 width="20"
                 height="20"
               />
               <span
-                x-text="Number(character.scores[character.scoreReference]).toFixed(1)"></span>
+                x-text="Number(character.scores[referenceScore === 'recommendation' ? character.scoreReference : referenceScore]).toFixed(1)"></span>
             </div>
           </div>
         </template>

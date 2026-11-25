@@ -1,5 +1,6 @@
 document.addEventListener("alpine:init", () => {
   Alpine.data("charactersList", () => ({
+    referenceScore: "recommendation",
     characters: [],
 
     async init() {

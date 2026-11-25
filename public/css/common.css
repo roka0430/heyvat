@@ -81,7 +81,8 @@ a {
 
 button,
 input,
-textarea {
+textarea,
+select {
   color: var(--color-text);
   font-family: var(--font-sans);
 }
