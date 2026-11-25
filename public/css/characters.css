@@ -23,6 +23,12 @@
   white-space: nowrap;
 }
 
+.characters__name {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
 .characters__consts div {
   display: inline-block;
   width: calc(29px + var(--consts) * 3px);

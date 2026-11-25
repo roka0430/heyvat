@@ -25,7 +25,15 @@
         </div>
         <template x-for="character in characters" :key="character.id">
           <div class="characters__item">
-            <div class="characters__name" x-text="character.name.ja"></div>
+            <div class="characters__name">
+              <img
+                :src="character.icon"
+                alt="character.name.en"
+                width="25"
+                height="25"
+              />
+              <span x-text="character.name.ja"></span>
+            </div>
             <div
               class="characters__consts"
               :class="`characters__consts--consts${character.consts}`">
